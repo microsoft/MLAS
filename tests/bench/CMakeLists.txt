@@ -1,0 +1,17 @@
+include_directories(../../src/lib)
+add_executable(onnxruntime_mlas_benchmark bench_computesoftmax.cpp bench_main.cpp bench_q4dq.cpp bench_q4gemm.cpp bench_qgemm.cpp bench_sconv.cpp bench_sgemm.cpp bench_sqnbitgemm.cpp bench_symm_qgemm.cpp bench_util.cpp)
+target_link_libraries(onnxruntime_mlas_benchmark PRIVATE benchmark::benchmark ${ONNXRUNTIME_MLAS_LIBS} onnxruntime_common ${CMAKE_DL_LIBS})
+target_compile_definitions(onnxruntime_mlas_benchmark PRIVATE BENCHMARK_STATIC_DEFINE)
+if(WIN32)
+  target_link_libraries(onnxruntime_mlas_benchmark PRIVATE debug Dbghelp)
+  # Avoid using new and delete. But this is a benchmark program, it's ok if it has a chance to leak.
+  target_compile_options(onnxruntime_mlas_benchmark PRIVATE /wd26409)
+  # "Global initializer calls a non-constexpr function." BENCHMARK_CAPTURE macro needs this.
+  target_compile_options(onnxruntime_mlas_benchmark PRIVATE /wd26426)
+else()
+  target_link_libraries(onnxruntime_mlas_benchmark PRIVATE ${CMAKE_DL_LIBS})
+endif()
+if (CPUINFO_SUPPORTED AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  target_link_libraries(onnxruntime_mlas_benchmark PRIVATE cpuinfo)
+endif()
+set_target_properties(onnxruntime_mlas_benchmark PROPERTIES FOLDER "ONNXRuntimeTest")
