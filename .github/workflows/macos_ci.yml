@@ -11,23 +11,8 @@ concurrency:
   cancel-in-progress: true
   
 jobs:
-  MacOS12_release:
-    runs-on: macos-12
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-         set -e -x
-         rm -rf build
-         cmake --workflow --preset macos_x86_64_release_workflow
-  MacOS13_release:
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-         set -e -x
-         rm -rf build
-         cmake --workflow --preset macos_x86_64_release_workflow
-  MacOS14_release:
+  # The following one doesn't work on macos-12. It has some compiling errors related to std::date
+  MacOS14_arm64_release:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -35,3 +20,12 @@ jobs:
          set -e -x
          rm -rf build
          cmake --workflow --preset macos_arm64_release_workflow
+         
+  MacOS14_universal2_release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset macos_universal2_release_workflow
