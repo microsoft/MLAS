@@ -27,7 +27,6 @@ limitations under the License.
 #include "core/common/common.h"
 #include "core/common/path_string.h"
 #include "core/framework/callback.h"
-#include "core/platform/telemetry.h"
 #include "core/session/onnxruntime_c_api.h"
 
 #ifndef _WIN32
@@ -228,9 +227,6 @@ class Env {
   // "version" should be the version of the library or NULL
   // returns the name that LoadDynamicLibrary() can use
   virtual std::string FormatLibraryFileName(const std::string& name, const std::string& version) const = 0;
-
-  // \brief returns a provider that will handle telemetry on the current platform
-  virtual const Telemetry& GetTelemetryProvider() const = 0;
 
   // \brief returns a value for the queried variable name (var_name)
   //

@@ -35,6 +35,10 @@ onnxruntime_fetchcontent_declare(
     FIND_PACKAGE_ARGS 4.0 NAMES Microsoft.GSL
 )
   
+set(EIGEN_BUILD_TESTING OFF CACHE BOOL "")
+set(EIGEN_BUILD_DOC OFF CACHE BOOL "")
+set(EIGEN_BUILD_DEMOS OFF CACHE BOOL "")
+
 onnxruntime_fetchcontent_declare(
         eigen
         URL ${DEP_URL_eigen}

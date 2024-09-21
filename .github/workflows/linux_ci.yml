@@ -1,0 +1,29 @@
+name: Linux_CI
+on:
+  push:
+    branches:
+      - main
+      - rel-*
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+  
+jobs:
+  Linux_x64_release_ubuntu24:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_workflow
+  Linux_x64_release_ubuntu22:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_workflow

@@ -537,10 +537,6 @@ class PosixEnv : public Env {
     return filename;
   }
 
-  // \brief returns a provider that will handle telemetry on the current platform
-  const Telemetry& GetTelemetryProvider() const override {
-    return telemetry_provider_;
-  }
 
   // \brief returns a value for the queried variable name (var_name)
   std::string GetEnvironmentVar(const std::string& var_name) const override {
@@ -549,7 +545,6 @@ class PosixEnv : public Env {
   }
 
  private:
-  Telemetry telemetry_provider_;
 #ifdef ORT_USE_CPUINFO
   PosixEnv() {
     cpuinfo_available_ = cpuinfo_initialize();

@@ -1,0 +1,338 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "linux_gcc_debug",
+            "displayName": "linux gcc debug",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-ggdb3 -O0",
+                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -D_GLIBCXX_DEBUG",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "gcc",
+                "CXX": "g++"
+            }
+        },
+        {
+            "name": "linux_gcc_release",
+            "displayName": "linux gcc release",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "gcc",
+                "CXX": "g++"
+            }
+        },
+        {
+            "name": "linux_gcc_debug_asan",
+            "displayName": "linux gcc debug asan",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address -D_GLIBCXX_DEBUG",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "gcc",
+                "CXX": "g++"
+            }
+        },
+        {
+            "name": "linux_gcc_release_asan",
+            "displayName": "linux gcc release asan",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "gcc",
+                "CXX": "g++"
+            }
+        },
+        {
+            "name": "linux_clang_debug",
+            "displayName": "linux clang debug",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-ggdb3 -O0",
+                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "/usr/bin/clang",
+                "CXX": "/usr/bin/clang++"
+            }
+        },
+        {
+            "name": "linux_clang_debug_asan",
+            "displayName": "linux clang debug asan",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "/usr/bin/clang",
+                "CXX": "/usr/bin/clang++"
+            }
+        },
+        {
+            "name": "linux_clang_debug_cov",
+            "displayName": "linux clang debug cov",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_CXX_STANDARD": "20"
+            },
+            "environment": {
+                "CC": "/usr/bin/clang",
+                "CXX": "/usr/bin/clang++"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "linux_gcc_debug",
+            "configurePreset": "linux_gcc_debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux_gcc_release",
+            "configurePreset": "linux_gcc_release",
+            "configuration": "Release"
+        },
+        {
+            "name": "linux_gcc_debug_asan",
+            "configurePreset": "linux_gcc_debug_asan",
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux_gcc_release_asan",
+            "configurePreset": "linux_gcc_release_asan",
+            "configuration": "Release"
+        },
+        {
+            "name": "linux_clang_debug",
+            "configurePreset": "linux_clang_debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux_clang_debug_asan",
+            "configurePreset": "linux_clang_debug_asan",
+            "configuration": "Debug"
+        },
+        {
+            "name": "linux_clang_debug_cov",
+            "configurePreset": "linux_clang_debug_cov",
+            "configuration": "Debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "linux_gcc_debug",
+            "configuration": "Debug",
+            "configurePreset": "linux_gcc_debug"
+        },
+        {
+            "name": "linux_gcc_release",
+            "configuration": "Release",
+            "configurePreset": "linux_gcc_release"
+        },
+        {
+            "name": "linux_gcc_debug_asan",
+            "configuration": "Debug",
+            "configurePreset": "linux_gcc_debug_asan"
+        },
+        {
+            "name": "linux_gcc_release_asan",
+            "configuration": "Release",
+            "configurePreset": "linux_gcc_release_asan"
+        },
+        {
+            "name": "linux_clang_debug",
+            "configuration": "Debug",
+            "configurePreset": "linux_clang_debug"
+        },
+        {
+            "name": "linux_clang_debug_asan",
+            "configuration": "Debug",
+            "configurePreset": "linux_clang_debug_asan"
+        },
+        {
+            "name": "linux_clang_debug_cov",
+            "configuration": "Debug",
+            "configurePreset": "linux_clang_debug_cov"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "linux_gcc_debug_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_gcc_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_gcc_debug"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_gcc_debug"
+                }
+            ]
+        },
+        {
+            "name": "linux_gcc_release_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_gcc_release"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_gcc_release"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_gcc_release"
+                }
+            ]
+        },
+        {
+            "name": "linux_gcc_debug_asan_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_gcc_debug_asan"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_gcc_debug_asan"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_gcc_debug_asan"
+                }
+            ]
+        },
+        {
+            "name": "linux_gcc_release_asan_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_gcc_release_asan"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_gcc_release_asan"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_gcc_release_asan"
+                }
+            ]
+        },
+        {
+            "name": "linux_clang_debug_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_clang_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_clang_debug"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_clang_debug"
+                }
+            ]
+        },
+        {
+            "name": "linux_clang_debug_asan_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_clang_debug_asan"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_clang_debug_asan"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_clang_debug_asan"
+                }
+            ]
+        },
+        {
+            "name": "linux_clang_debug_cov_workflow",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "linux_clang_debug_cov"
+                },
+                {
+                    "type": "build",
+                    "name": "linux_clang_debug_cov"
+                },
+                {
+                    "type": "test",
+                    "name": "linux_clang_debug_cov"
+                }
+            ]
+        }
+    ]
+}
