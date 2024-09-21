@@ -73,5 +73,5 @@ endif()
 
 #gtest_discover_tests(mlas_unittest)
 add_test(NAME mlas_unittest
-        COMMAND mlas_unittest "--gtest_output=xml:$<SHELL_PATH:$<TARGET_FILE:mlas_unittest>.results.xml>
+        COMMAND mlas_unittest "--gtest_output=xml:$<SHELL_PATH:$<TARGET_FILE:mlas_unittest>.results.xml>"
         WORKING_DIRECTORY $<TARGET_FILE_DIR:mlas_unittest>)
