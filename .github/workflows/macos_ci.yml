@@ -1,0 +1,37 @@
+name: MacOS_CI
+on:
+  push:
+    branches:
+      - main
+      - rel-*
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  MacOS12_release:
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset macos_x86_64_release_workflow
+  MacOS13_release:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset macos_x86_64_release_workflow
+  MacOS14_release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset macos_arm64_release_workflow
