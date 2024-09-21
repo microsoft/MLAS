@@ -6,6 +6,7 @@
 #import <Foundation/Foundation.h>
 
 #include <sstream>
+#include <chrono>
 
 namespace onnxruntime {
 namespace logging {
