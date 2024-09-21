@@ -396,7 +396,9 @@ else()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
             add_library(onnxruntime_mlas_arm64 STATIC ${mlas_platform_srcs})
+            list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_arm64)
             set_target_properties(onnxruntime_mlas_arm64 PROPERTIES OSX_ARCHITECTURES "arm64")
+            mlas_target(onnxruntime_mlas_arm64)
             set(mlas_platform_srcs )
         else()
             set(MLAS_SOURCE_IS_NOT_SET 0)
@@ -633,7 +635,7 @@ endif()
         if(NOT APPLE)
           set(mlas_platform_srcs
             ${mlas_platform_srcs}
-	        ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmxCommon.S
+            ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmxCommon.S
             ${MLAS_SRC_DIR}/qgemm_kernel_amx.cpp
             ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmx.S
             )
