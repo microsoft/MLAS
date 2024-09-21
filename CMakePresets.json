@@ -11,6 +11,11 @@
             "displayName": "linux clang debug",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
@@ -30,6 +35,11 @@
             "displayName": "linux clang debug asan",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
@@ -49,6 +59,11 @@
             "displayName": "linux clang debug cov",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
@@ -68,6 +83,11 @@
             "displayName": "linux gcc debug",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
@@ -87,6 +107,11 @@
             "displayName": "linux gcc debug asan",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
@@ -106,6 +131,11 @@
             "displayName": "linux gcc release",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
@@ -125,6 +155,11 @@
             "displayName": "linux gcc release asan",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/default",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
@@ -147,7 +182,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -168,7 +203,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -189,7 +224,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -210,7 +245,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -231,7 +266,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -252,7 +287,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -273,7 +308,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -294,7 +329,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -315,7 +350,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -336,7 +371,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -357,7 +392,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -378,7 +413,7 @@
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
-                "rhs": "Linux"
+                "rhs": "Darwin"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
