@@ -189,9 +189,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "arm64",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
@@ -231,9 +228,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "arm64",
                 "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
                 "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
@@ -273,9 +267,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
@@ -315,9 +306,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
                 "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
                 "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
@@ -357,9 +345,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "x86_64",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
@@ -399,9 +384,6 @@
                 "CMAKE_OSX_ARCHITECTURES": "x86_64",
                 "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
                 "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "",
                 "CMAKE_CXX_STANDARD": "20"
             }
         },
