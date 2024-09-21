@@ -7,11 +7,11 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
   
 jobs:
-  Linux_x64_release_ubuntu24:
+  Linux_x64_gcc_ubuntu24_release:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
          set -e -x
          rm -rf build
          cmake --workflow --preset linux_gcc_release_workflow
-  Linux_x64_release_ubuntu22:
+  Linux_x64_gcc_ubuntu22_release:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -27,3 +27,27 @@ jobs:
          set -e -x
          rm -rf build
          cmake --workflow --preset linux_gcc_release_workflow
+  Linux_x64_gcc_ubuntu24_debug:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_debug_workflow
+  Linux_x64_clang_ubuntu24_debug:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_clang_debug
+  Linux_x64_gcc_ubuntu24_debug_asan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_debug_asan_workflow
