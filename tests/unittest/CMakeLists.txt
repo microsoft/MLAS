@@ -71,6 +71,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   endif()
 endif()
 
-#gtest_discover_tests is slower.
 #gtest_discover_tests(mlas_unittest)
-add_test(NAME mlas_unittest WORKING_DIRECTORY $<TARGET_FILE_DIR:mlas_unittest>)
+add_test(NAME mlas_unittest
+        COMMAND mlas_unittest
+        WORKING_DIRECTORY $<TARGET_FILE_DIR:mlas_unittest>)

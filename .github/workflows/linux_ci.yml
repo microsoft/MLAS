@@ -42,7 +42,7 @@ jobs:
       - run: |
          set -e -x
          rm -rf build
-         cmake --workflow --preset linux_clang_debug
+         cmake --workflow --preset linux_clang_debug_workflow
   Linux_x64_gcc_ubuntu24_debug_asan:
     runs-on: ubuntu-24.04
     steps:
