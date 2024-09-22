@@ -67,7 +67,8 @@ jobs:
          source emsdk_env.sh
          cd ..
          CFLAGS="-O0 -g -fsanitize=address" CXXFLAGS="-O0 -g -fsanitize=address" emcmake cmake .. -DCMAKE_BUILD_TYPE=Debug -DMLAS_ENABLE_WEBASSEMBLY_THREADS=ON
-         ctest
+         make -j $(nproc) all
+         ctest --output-on-failure
   Linux_wasm_release:
     runs-on: ubuntu-24.04
     steps:
@@ -84,4 +85,5 @@ jobs:
          source emsdk_env.sh
          cd ..
          CFLAGS="-O2 -DNDEBUG -g" CXXFLAGS="-O2 -DNDEBUG -g" emcmake cmake .. -DCMAKE_BUILD_TYPE=Release -DMLAS_ENABLE_WEBASSEMBLY_THREADS=ON
-         ctest
+         make -j $(nproc) all
+         ctest --output-on-failure
