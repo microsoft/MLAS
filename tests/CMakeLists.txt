@@ -1,4 +1,7 @@
 include_directories(../src/inc)
 include_directories(../include)
-add_subdirectory(bench)
+#google benchmark doesn't work for Emscripten
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  add_subdirectory(bench)
+endif()
 add_subdirectory(unittest)
