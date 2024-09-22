@@ -67,7 +67,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   else()
 	set_target_properties(mlas_unittest PROPERTIES LINK_FLAGS "-s ALLOW_MEMORY_GROWTH=1")
   endif()
-  target_link_options(mlas_unittest PRIVATE "-sDEFAULT_PTHREAD_STACK_SIZE=131072")
+  #TODO: do we need to set both? Shouldn't them be the same?
+  target_link_options(mlas_unittest PRIVATE "-sDEFAULT_PTHREAD_STACK_SIZE=2097152" "-sSTACK_SIZE=5242880")
 endif()
 
 #gtest_discover_tests(mlas_unittest)

@@ -407,82 +407,6 @@
                 "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
                 "CMAKE_CXX_STANDARD": "20"
             }
-        },
-        {
-            "name": "emscripten_debug",
-            "displayName": "emscripten debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "emcc",
-                "CXX": "em++"
-            }
-        },
-        {
-            "name": "emscripten_debug_asan",
-            "displayName": "emscripten debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "emcc",
-                "CXX": "em++"
-            }
-        },
-        {
-            "name": "emscripten_release",
-            "displayName": "emscripten release",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-gsource-map",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "emcc",
-                "CXX": "em++"
-            }
-        },
-        {
-            "name": "emscripten_release_asan",
-            "displayName": "emscripten release asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-gsource-map -fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "emcc",
-                "CXX": "em++"
-            }
         }
     ],
     "buildPresets": [
@@ -579,26 +503,6 @@
         {
             "name": "macos_x86_64_release_asan",
             "configurePreset": "macos_x86_64_release_asan",
-            "configuration": "Release"
-        },
-        {
-            "name": "emscripten_debug",
-            "configurePreset": "emscripten_debug",
-            "configuration": "Debug"
-        },
-        {
-            "name": "emscripten_debug_asan",
-            "configurePreset": "emscripten_debug_asan",
-            "configuration": "Debug"
-        },
-        {
-            "name": "emscripten_release",
-            "configurePreset": "emscripten_release",
-            "configuration": "Release"
-        },
-        {
-            "name": "emscripten_release_asan",
-            "configurePreset": "emscripten_release_asan",
             "configuration": "Release"
         }
     ],
@@ -697,26 +601,6 @@
             "name": "macos_x86_64_release_asan",
             "configuration": "Release",
             "configurePreset": "macos_x86_64_release_asan"
-        },
-        {
-            "name": "emscripten_debug",
-            "configuration": "Debug",
-            "configurePreset": "emscripten_debug"
-        },
-        {
-            "name": "emscripten_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "emscripten_debug_asan"
-        },
-        {
-            "name": "emscripten_release",
-            "configuration": "Release",
-            "configurePreset": "emscripten_release"
-        },
-        {
-            "name": "emscripten_release_asan",
-            "configuration": "Release",
-            "configurePreset": "emscripten_release_asan"
         }
     ],
     "workflowPresets": [
@@ -1040,74 +924,6 @@
                 {
                     "type": "test",
                     "name": "macos_x86_64_release"
-                }
-            ]
-        },
-        {
-            "name": "emscripten_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "emscripten_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "emscripten_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "emscripten_debug_asan"
-                }
-            ]
-        },
-        {
-            "name": "emscripten_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "emscripten_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "emscripten_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "emscripten_debug"
-                }
-            ]
-        },
-        {
-            "name": "emscripten_release_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "emscripten_release_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "emscripten_release_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "emscripten_release_asan"
-                }
-            ]
-        },
-        {
-            "name": "emscripten_release_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "emscripten_release"
-                },
-                {
-                    "type": "build",
-                    "name": "emscripten_release"
-                },
-                {
-                    "type": "test",
-                    "name": "emscripten_release"
                 }
             ]
         }
