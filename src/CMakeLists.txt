@@ -7,7 +7,6 @@ set(onnxruntime_common_src_patterns
         "common/*.cc"
         "common/logging/*.h"
         "common/logging/*.cc"
-
         "core/platform/env.h"
         "core/platform/env.cc"
         "core/platform/env_time.h"
@@ -26,10 +25,6 @@ if(WIN32)
             "core/platform/windows/logging/*.h"
             "core/platform/windows/logging/*.cc"
             )
-    # Windows platform adapter code uses advapi32, which isn't linked in by default in desktop ARM
-    if (NOT WINDOWS_STORE)
-        list(APPEND onnxruntime_EXTERNAL_LIBRARIES advapi32)
-    endif()
 else()
     list(APPEND onnxruntime_common_src_patterns
             "core/platform/posix/*.h"

@@ -1,0 +1,89 @@
+name: Linux_CI
+on:
+  push:
+    branches:
+      - main
+      - rel-*
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  Linux_x64_gcc_ubuntu24_release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_workflow
+  Linux_x64_gcc_ubuntu22_release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_workflow
+  Linux_x64_gcc_ubuntu24_debug:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_debug_workflow
+  Linux_x64_clang_ubuntu24_debug:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_clang_debug_workflow
+  Linux_x64_gcc_ubuntu24_debug_asan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_debug_asan_workflow
+  Linux_wasm_debug_asan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         mkdir -p build
+         cd build
+         git clone https://github.com/emscripten-core/emsdk.git
+         cd emsdk
+         ./emsdk install latest
+         ./emsdk activate latest
+         source emsdk_env.sh
+         cd ..
+         CFLAGS="-O0 -g -fsanitize=address" CXXFLAGS="-O0 -g -fsanitize=address" emcmake cmake .. -DCMAKE_BUILD_TYPE=Debug -DMLAS_ENABLE_WEBASSEMBLY_THREADS=ON
+         make -j $(nproc) all
+         ctest --output-on-failure
+  Linux_wasm_release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         mkdir -p build
+         cd build
+         git clone https://github.com/emscripten-core/emsdk.git
+         cd emsdk
+         ./emsdk install latest
+         ./emsdk activate latest
+         source emsdk_env.sh
+         cd ..
+         CFLAGS="-O2 -DNDEBUG -g" CXXFLAGS="-O2 -DNDEBUG -g" emcmake cmake .. -DCMAKE_BUILD_TYPE=Release -DMLAS_ENABLE_WEBASSEMBLY_THREADS=ON
+         make -j $(nproc) all
+         ctest --output-on-failure
