@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - rel-*
+      - snnn/*
   pull_request:
 
 concurrency:
