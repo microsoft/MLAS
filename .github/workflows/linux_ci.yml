@@ -11,14 +11,39 @@ concurrency:
   cancel-in-progress: true
   
 jobs:
-  Linux_x64_gcc_ubuntu24_release:
-    runs-on: ubuntu-24.04
+  Linux_arm64_gcc_release:
+    runs-on: ["self-hosted", "1ES.Pool=mlas-linux-ARM64-CPU"]
     steps:
       - uses: actions/checkout@v4
       - run: |
          set -e -x
          rm -rf build
          cmake --workflow --preset linux_gcc_release_workflow
+
+  Linux_x64_gcc_ubuntu24_release:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_workflow
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
   Linux_x64_gcc_ubuntu22_release:
     runs-on: ubuntu-22.04
     steps:
