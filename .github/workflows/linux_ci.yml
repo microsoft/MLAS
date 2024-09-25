@@ -40,7 +40,7 @@ jobs:
          cmake --workflow --preset linux_gcc_release_workflow
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        output: sarif-results
+          output: sarif-results
         
       - name: filter-sarif
         uses: advanced-security/filter-sarif@v1
