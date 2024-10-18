@@ -20,14 +20,14 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
                 "CMAKE_CXX_STANDARD": "20"
             },
             "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
+                "CC": "clang",
+                "CXX": "clang++"
             }
         },
         {
@@ -44,14 +44,14 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
                 "CMAKE_CXX_STANDARD": "20"
             },
             "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
+                "CC": "clang",
+                "CXX": "clang++"
             }
         },
         {
@@ -68,14 +68,14 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
                 "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
+                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
                 "CMAKE_CXX_STANDARD": "20"
             },
             "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
+                "CC": "clang",
+                "CXX": "clang++"
             }
         },
         {
