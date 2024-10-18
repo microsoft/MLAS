@@ -20,13 +20,10 @@ Abstract:
 
 #include "q4common.h"
 
-template<typename T>
-constexpr
-size_t
-BlkQ4BufSize(size_t N, size_t K)
-{
-    const size_t KBlocks = MlasDivRoundup(K, T::BlkLen);
-    return N * KBlocks * T::BlobSize;
+template <typename T>
+constexpr size_t BlkQ4BufSize(size_t N, size_t K) {
+  const size_t KBlocks = MlasDivRoundup(K, T::BlkLen);
+  return N * KBlocks * T::BlobSize;
 }
 
 size_t

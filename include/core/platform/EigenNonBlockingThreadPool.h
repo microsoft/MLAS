@@ -10,7 +10,7 @@
 /* Modifications Copyright (c) Microsoft. */
 
 #include <type_traits>
-
+#include <cassert>
 #pragma once
 #include "onnxruntime_config.h"
 // build/external/eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvaluator.h:162:71:
@@ -52,7 +52,6 @@
 #include "core/common/spin_pause.h"
 #include "core/platform/ort_mutex.h"
 #include "core/platform/ort_spin_lock.h"
-#include "core/platform/Barrier.h"
 
 // ORT thread pool overview
 // ------------------------

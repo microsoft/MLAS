@@ -5,7 +5,19 @@
 #include "core/util/thread_utils.h"
 #include "bench_util.h"
 
+#ifndef BUILD_MLAS_NO_ONNXRUNTIME
 using onnxruntime::narrow;
+#else
+using gsl::narrow;
+#define ORT_THROW(X) throw std::runtime_error(X)
+#define ORT_ENFORCE(condition, ...) \
+  do {                              \
+    if (!(condition)) {             \
+      abort();                      \
+    }                               \
+  } while (false)
+#define ORT_THROW_EX(X) throw X();
+#endif
 
 struct RestrictAlignedPtr {
   float* ptr;               // Aligned pointer within the underlying buffer

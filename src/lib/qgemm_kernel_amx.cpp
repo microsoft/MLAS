@@ -17,7 +17,7 @@ Abstract:
 #include "mlasi.h"
 #include "qgemm.h"
 #include "amx_common.h"
-
+#include <cstring>
 
 #define TMM0 0
 #define TMM1 1

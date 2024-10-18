@@ -18,7 +18,18 @@ Abstract:
     the parameters and the quantized data in a blob.
 --*/
 
+#ifndef BUILD_MLAS_NO_ONNXRUNTIME
 #include "core/common/common.h"
+#else
+#define ORT_THROW(X) throw std::runtime_error(X)
+#define ORT_ENFORCE(condition, ...) \
+  do {                              \
+    if (!(condition)) {             \
+      abort();                      \
+    }                               \
+  } while (false)
+
+#endif
 
 #include "mlas_q4.h"
 #include "mlasi.h"

@@ -21,6 +21,7 @@ Abstract:
 
 #include <type_traits>
 #include <immintrin.h>
+#include <string.h>
 
 struct MLAS_FP_Q4_GEMM_KERNEL_AVX512VNNI {
     static constexpr size_t StrideM = 256;

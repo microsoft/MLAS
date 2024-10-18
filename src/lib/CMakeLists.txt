@@ -89,6 +89,7 @@ function(setup_mlas_source_for_windows)
         ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon.cpp
         ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_fp32.cpp
         ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_int8.cpp
+        ${MLAS_SRC_DIR}/fp16_neon_common.cpp
       )
 
       set(mlas_platform_preprocess_srcs
@@ -383,6 +384,7 @@ else()
             ${MLAS_SRC_DIR}/qgemm_kernel_smmla.cpp
             ${MLAS_SRC_DIR}/qgemm_kernel_ummla.cpp
             ${MLAS_SRC_DIR}/sbgemm_kernel_neon.cpp
+            ${MLAS_SRC_DIR}/fp16_neon_common.cpp
           )
           set_source_files_properties(${MLAS_SRC_DIR}/aarch64/HalfGemmKernelNeon.S PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/aarch64/QgemmS8S8KernelSmmla.S PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+i8mm ")
@@ -392,6 +394,7 @@ else()
           set_source_files_properties(${MLAS_SRC_DIR}/dwconv.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/pooling_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/sbgemm_kernel_neon.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+bf16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/fp16_neon_common.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
         endif()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
@@ -734,7 +737,10 @@ endblock()
   target_include_directories(onnxruntime_mlas_q4dq PRIVATE ${MLAS_INC_DIR} ${MLAS_SRC_DIR})
   set_target_properties(onnxruntime_mlas_q4dq PROPERTIES FOLDER "ONNXRuntimeTest")
 
-  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS} onnxruntime_common)
+  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS})
+  if(NOT MLAS_NO_ONNXRUNTIME)
+    target_link_libraries(onnxruntime_mlas_q4dq PRIVATE onnxruntime_common)
+  endif()
   if (CPUINFO_SUPPORTED AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     target_link_libraries(onnxruntime_mlas_q4dq PRIVATE cpuinfo)
   endif()

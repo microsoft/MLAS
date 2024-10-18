@@ -1,931 +1,2265 @@
 {
-    "version": 8,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 28,
-        "patch": 0
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "linux_clang_debug",
+      "displayName": "linux clang debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
     },
-    "configurePresets": [
+    {
+      "name": "linux_clang_debug_asan",
+      "displayName": "linux clang debug asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "linux_clang_debug_asan_no_ort",
+      "displayName": "linux clang debug asan no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "linux_clang_debug_cov",
+      "displayName": "linux clang debug cov",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/cov/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "linux_clang_debug_cov_no_ort",
+      "displayName": "linux clang debug cov no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/cov/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "linux_clang_debug_no_ort",
+      "displayName": "linux clang debug no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "linux_gcc_debug",
+      "displayName": "linux gcc debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -D_GLIBCXX_DEBUG",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_debug_asan",
+      "displayName": "linux gcc debug asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address -D_GLIBCXX_DEBUG",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_debug_asan_no_ort",
+      "displayName": "linux gcc debug asan no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address -D_GLIBCXX_DEBUG",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_debug_no_ort",
+      "displayName": "linux gcc debug no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -D_GLIBCXX_DEBUG",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_minsizerel",
+      "displayName": "linux gcc minsizerel",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan",
+      "displayName": "linux gcc minsizerel asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan_no_ort",
+      "displayName": "linux gcc minsizerel asan no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_minsizerel_no_ort",
+      "displayName": "linux gcc minsizerel no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_release",
+      "displayName": "linux gcc release",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_release_asan",
+      "displayName": "linux gcc release asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_release_asan_no_ort",
+      "displayName": "linux gcc release asan no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_release_no_ort",
+      "displayName": "linux gcc release no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo",
+      "displayName": "linux gcc relwithdebinfo",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan",
+      "displayName": "linux gcc relwithdebinfo asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan_no_ort",
+      "displayName": "linux gcc relwithdebinfo asan no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/asan/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_no_ort",
+      "displayName": "linux gcc relwithdebinfo no ort",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default/no_ort",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
+        "CMAKE_CXX_STANDARD": "20",
+        "MLAS_NO_ONNXRUNTIME": "ON"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "macos_arm64_debug",
+      "displayName": "macos arm64 debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_debug_asan",
+      "displayName": "macos arm64 debug asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_minsizerel",
+      "displayName": "macos arm64 minsizerel",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_minsizerel_asan",
+      "displayName": "macos arm64 minsizerel asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_release",
+      "displayName": "macos arm64 release",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_release_asan",
+      "displayName": "macos arm64 release asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo",
+      "displayName": "macos arm64 relwithdebinfo",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo_asan",
+      "displayName": "macos arm64 relwithdebinfo asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_debug",
+      "displayName": "macos universal2 debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_debug_asan",
+      "displayName": "macos universal2 debug asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_minsizerel",
+      "displayName": "macos universal2 minsizerel",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_minsizerel_asan",
+      "displayName": "macos universal2 minsizerel asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_release",
+      "displayName": "macos universal2 release",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_release_asan",
+      "displayName": "macos universal2 release asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo",
+      "displayName": "macos universal2 relwithdebinfo",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo_asan",
+      "displayName": "macos universal2 relwithdebinfo asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_debug",
+      "displayName": "macos x86 64 debug",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_debug_asan",
+      "displayName": "macos x86 64 debug asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_minsizerel",
+      "displayName": "macos x86 64 minsizerel",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_minsizerel_asan",
+      "displayName": "macos x86 64 minsizerel asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -Os -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_release",
+      "displayName": "macos x86 64 release",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_release_asan",
+      "displayName": "macos x86 64 release asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo",
+      "displayName": "macos x86 64 relwithdebinfo",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo_asan",
+      "displayName": "macos x86 64 relwithdebinfo asan",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -ggdb3 -fsanitize=address",
+        "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux_clang_debug",
+      "configurePreset": "linux_clang_debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_debug_asan",
+      "configurePreset": "linux_clang_debug_asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_debug_asan_no_ort",
+      "configurePreset": "linux_clang_debug_asan_no_ort",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_debug_cov",
+      "configurePreset": "linux_clang_debug_cov",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_debug_cov_no_ort",
+      "configurePreset": "linux_clang_debug_cov_no_ort",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_debug_no_ort",
+      "configurePreset": "linux_clang_debug_no_ort",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_debug",
+      "configurePreset": "linux_gcc_debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_debug_asan",
+      "configurePreset": "linux_gcc_debug_asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_debug_asan_no_ort",
+      "configurePreset": "linux_gcc_debug_asan_no_ort",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_debug_no_ort",
+      "configurePreset": "linux_gcc_debug_no_ort",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_minsizerel",
+      "configurePreset": "linux_gcc_minsizerel",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan",
+      "configurePreset": "linux_gcc_minsizerel_asan",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan_no_ort",
+      "configurePreset": "linux_gcc_minsizerel_asan_no_ort",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "linux_gcc_minsizerel_no_ort",
+      "configurePreset": "linux_gcc_minsizerel_no_ort",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "linux_gcc_release",
+      "configurePreset": "linux_gcc_release",
+      "configuration": "Release"
+    },
+    {
+      "name": "linux_gcc_release_asan",
+      "configurePreset": "linux_gcc_release_asan",
+      "configuration": "Release"
+    },
+    {
+      "name": "linux_gcc_release_asan_no_ort",
+      "configurePreset": "linux_gcc_release_asan_no_ort",
+      "configuration": "Release"
+    },
+    {
+      "name": "linux_gcc_release_no_ort",
+      "configurePreset": "linux_gcc_release_no_ort",
+      "configuration": "Release"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo",
+      "configurePreset": "linux_gcc_relwithdebinfo",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan",
+      "configurePreset": "linux_gcc_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan_no_ort",
+      "configurePreset": "linux_gcc_relwithdebinfo_asan_no_ort",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_no_ort",
+      "configurePreset": "linux_gcc_relwithdebinfo_no_ort",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_arm64_debug",
+      "configurePreset": "macos_arm64_debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_arm64_debug_asan",
+      "configurePreset": "macos_arm64_debug_asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_arm64_minsizerel",
+      "configurePreset": "macos_arm64_minsizerel",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_arm64_minsizerel_asan",
+      "configurePreset": "macos_arm64_minsizerel_asan",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_arm64_release",
+      "configurePreset": "macos_arm64_release",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_arm64_release_asan",
+      "configurePreset": "macos_arm64_release_asan",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo",
+      "configurePreset": "macos_arm64_relwithdebinfo",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo_asan",
+      "configurePreset": "macos_arm64_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_universal2_debug",
+      "configurePreset": "macos_universal2_debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_universal2_debug_asan",
+      "configurePreset": "macos_universal2_debug_asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_universal2_minsizerel",
+      "configurePreset": "macos_universal2_minsizerel",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_universal2_minsizerel_asan",
+      "configurePreset": "macos_universal2_minsizerel_asan",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_universal2_release",
+      "configurePreset": "macos_universal2_release",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_universal2_release_asan",
+      "configurePreset": "macos_universal2_release_asan",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo",
+      "configurePreset": "macos_universal2_relwithdebinfo",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo_asan",
+      "configurePreset": "macos_universal2_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_x86_64_debug",
+      "configurePreset": "macos_x86_64_debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_x86_64_debug_asan",
+      "configurePreset": "macos_x86_64_debug_asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos_x86_64_minsizerel",
+      "configurePreset": "macos_x86_64_minsizerel",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_x86_64_minsizerel_asan",
+      "configurePreset": "macos_x86_64_minsizerel_asan",
+      "configuration": "MinSizeRel"
+    },
+    {
+      "name": "macos_x86_64_release",
+      "configurePreset": "macos_x86_64_release",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_x86_64_release_asan",
+      "configurePreset": "macos_x86_64_release_asan",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo",
+      "configurePreset": "macos_x86_64_relwithdebinfo",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo_asan",
+      "configurePreset": "macos_x86_64_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux_clang_debug",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug"
+    },
+    {
+      "name": "linux_clang_debug_asan",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug_asan"
+    },
+    {
+      "name": "linux_clang_debug_asan_no_ort",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug_asan_no_ort"
+    },
+    {
+      "name": "linux_clang_debug_cov",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug_cov"
+    },
+    {
+      "name": "linux_clang_debug_cov_no_ort",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug_cov_no_ort"
+    },
+    {
+      "name": "linux_clang_debug_no_ort",
+      "configuration": "Debug",
+      "configurePreset": "linux_clang_debug_no_ort"
+    },
+    {
+      "name": "linux_gcc_debug",
+      "configuration": "Debug",
+      "configurePreset": "linux_gcc_debug"
+    },
+    {
+      "name": "linux_gcc_debug_asan",
+      "configuration": "Debug",
+      "configurePreset": "linux_gcc_debug_asan"
+    },
+    {
+      "name": "linux_gcc_debug_asan_no_ort",
+      "configuration": "Debug",
+      "configurePreset": "linux_gcc_debug_asan_no_ort"
+    },
+    {
+      "name": "linux_gcc_debug_no_ort",
+      "configuration": "Debug",
+      "configurePreset": "linux_gcc_debug_no_ort"
+    },
+    {
+      "name": "linux_gcc_minsizerel",
+      "configuration": "MinSizeRel",
+      "configurePreset": "linux_gcc_minsizerel"
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan",
+      "configuration": "MinSizeRel",
+      "configurePreset": "linux_gcc_minsizerel_asan"
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan_no_ort",
+      "configuration": "MinSizeRel",
+      "configurePreset": "linux_gcc_minsizerel_asan_no_ort"
+    },
+    {
+      "name": "linux_gcc_minsizerel_no_ort",
+      "configuration": "MinSizeRel",
+      "configurePreset": "linux_gcc_minsizerel_no_ort"
+    },
+    {
+      "name": "linux_gcc_release",
+      "configuration": "Release",
+      "configurePreset": "linux_gcc_release"
+    },
+    {
+      "name": "linux_gcc_release_asan",
+      "configuration": "Release",
+      "configurePreset": "linux_gcc_release_asan"
+    },
+    {
+      "name": "linux_gcc_release_asan_no_ort",
+      "configuration": "Release",
+      "configurePreset": "linux_gcc_release_asan_no_ort"
+    },
+    {
+      "name": "linux_gcc_release_no_ort",
+      "configuration": "Release",
+      "configurePreset": "linux_gcc_release_no_ort"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "linux_gcc_relwithdebinfo"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "linux_gcc_relwithdebinfo_asan"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan_no_ort",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "linux_gcc_relwithdebinfo_asan_no_ort"
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_no_ort",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "linux_gcc_relwithdebinfo_no_ort"
+    },
+    {
+      "name": "macos_arm64_debug",
+      "configuration": "Debug",
+      "configurePreset": "macos_arm64_debug"
+    },
+    {
+      "name": "macos_arm64_debug_asan",
+      "configuration": "Debug",
+      "configurePreset": "macos_arm64_debug_asan"
+    },
+    {
+      "name": "macos_arm64_minsizerel",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_arm64_minsizerel"
+    },
+    {
+      "name": "macos_arm64_minsizerel_asan",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_arm64_minsizerel_asan"
+    },
+    {
+      "name": "macos_arm64_release",
+      "configuration": "Release",
+      "configurePreset": "macos_arm64_release"
+    },
+    {
+      "name": "macos_arm64_release_asan",
+      "configuration": "Release",
+      "configurePreset": "macos_arm64_release_asan"
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_arm64_relwithdebinfo"
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_arm64_relwithdebinfo_asan"
+    },
+    {
+      "name": "macos_universal2_debug",
+      "configuration": "Debug",
+      "configurePreset": "macos_universal2_debug"
+    },
+    {
+      "name": "macos_universal2_debug_asan",
+      "configuration": "Debug",
+      "configurePreset": "macos_universal2_debug_asan"
+    },
+    {
+      "name": "macos_universal2_minsizerel",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_universal2_minsizerel"
+    },
+    {
+      "name": "macos_universal2_minsizerel_asan",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_universal2_minsizerel_asan"
+    },
+    {
+      "name": "macos_universal2_release",
+      "configuration": "Release",
+      "configurePreset": "macos_universal2_release"
+    },
+    {
+      "name": "macos_universal2_release_asan",
+      "configuration": "Release",
+      "configurePreset": "macos_universal2_release_asan"
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_universal2_relwithdebinfo"
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_universal2_relwithdebinfo_asan"
+    },
+    {
+      "name": "macos_x86_64_debug",
+      "configuration": "Debug",
+      "configurePreset": "macos_x86_64_debug"
+    },
+    {
+      "name": "macos_x86_64_debug_asan",
+      "configuration": "Debug",
+      "configurePreset": "macos_x86_64_debug_asan"
+    },
+    {
+      "name": "macos_x86_64_minsizerel",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_x86_64_minsizerel"
+    },
+    {
+      "name": "macos_x86_64_minsizerel_asan",
+      "configuration": "MinSizeRel",
+      "configurePreset": "macos_x86_64_minsizerel_asan"
+    },
+    {
+      "name": "macos_x86_64_release",
+      "configuration": "Release",
+      "configurePreset": "macos_x86_64_release"
+    },
+    {
+      "name": "macos_x86_64_release_asan",
+      "configuration": "Release",
+      "configurePreset": "macos_x86_64_release_asan"
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_x86_64_relwithdebinfo"
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo_asan",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "macos_x86_64_relwithdebinfo_asan"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "linux_clang_debug_asan_no_ort_workflow",
+      "steps": [
         {
-            "name": "linux_clang_debug",
-            "displayName": "linux clang debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
-            }
+          "type": "configure",
+          "name": "linux_clang_debug_asan_no_ort"
         },
         {
-            "name": "linux_clang_debug_asan",
-            "displayName": "linux clang debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
-            }
+          "type": "build",
+          "name": "linux_clang_debug_asan_no_ort"
         },
         {
-            "name": "linux_clang_debug_cov",
-            "displayName": "linux clang debug cov",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fprofile-instr-generate -fcoverage-mapping",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -L/usr/lib64/x86_64-unknown-linux-gnu",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "/usr/bin/clang",
-                "CXX": "/usr/bin/clang++"
-            }
-        },
-        {
-            "name": "linux_gcc_debug",
-            "displayName": "linux gcc debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -D_GLIBCXX_DEBUG",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "gcc",
-                "CXX": "g++"
-            }
-        },
-        {
-            "name": "linux_gcc_debug_asan",
-            "displayName": "linux gcc debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address -D_GLIBCXX_DEBUG",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "gcc",
-                "CXX": "g++"
-            }
-        },
-        {
-            "name": "linux_gcc_release",
-            "displayName": "linux gcc release",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "gcc",
-                "CXX": "g++"
-            }
-        },
-        {
-            "name": "linux_gcc_release_asan",
-            "displayName": "linux gcc release asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            },
-            "environment": {
-                "CC": "gcc",
-                "CXX": "g++"
-            }
-        },
-        {
-            "name": "macos_arm64_debug",
-            "displayName": "macos arm64 debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "arm64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_arm64_debug_asan",
-            "displayName": "macos arm64 debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "arm64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_arm64_release",
-            "displayName": "macos arm64 release",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "arm64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_arm64_release_asan",
-            "displayName": "macos arm64 release asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "arm64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_universal2_debug",
-            "displayName": "macos universal2 debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_universal2_debug_asan",
-            "displayName": "macos universal2 debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_universal2_release",
-            "displayName": "macos universal2 release",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_universal2_release_asan",
-            "displayName": "macos universal2 release asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_x86_64_debug",
-            "displayName": "macos x86 64 debug",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "x86_64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_x86_64_debug_asan",
-            "displayName": "macos x86 64 debug asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_OSX_ARCHITECTURES": "x86_64",
-                "CMAKE_C_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-ggdb3 -O0 -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_x86_64_release",
-            "displayName": "macos x86 64 release",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "x86_64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe",
-                "CMAKE_CXX_STANDARD": "20"
-            }
-        },
-        {
-            "name": "macos_x86_64_release_asan",
-            "displayName": "macos x86 64 release asan",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/default",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_OSX_ARCHITECTURES": "x86_64",
-                "CMAKE_C_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_CXX_FLAGS": "-DNDEBUG -Wp,-D_GLIBCXX_ASSERTIONS -fstack-protector-strong -O3 -pipe -fsanitize=address",
-                "CMAKE_EXE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_MODULE_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_SHARED_LINKER_FLAGS_INIT": "-fsanitize=address",
-                "CMAKE_CXX_STANDARD": "20"
-            }
+          "type": "test",
+          "name": "linux_clang_debug_asan_no_ort"
         }
-    ],
-    "buildPresets": [
+      ]
+    },
+    {
+      "name": "linux_clang_debug_asan_workflow",
+      "steps": [
         {
-            "name": "linux_clang_debug",
-            "configurePreset": "linux_clang_debug",
-            "configuration": "Debug"
+          "type": "configure",
+          "name": "linux_clang_debug_asan"
         },
         {
-            "name": "linux_clang_debug_asan",
-            "configurePreset": "linux_clang_debug_asan",
-            "configuration": "Debug"
+          "type": "build",
+          "name": "linux_clang_debug_asan"
         },
         {
-            "name": "linux_clang_debug_cov",
-            "configurePreset": "linux_clang_debug_cov",
-            "configuration": "Debug"
-        },
-        {
-            "name": "linux_gcc_debug",
-            "configurePreset": "linux_gcc_debug",
-            "configuration": "Debug"
-        },
-        {
-            "name": "linux_gcc_debug_asan",
-            "configurePreset": "linux_gcc_debug_asan",
-            "configuration": "Debug"
-        },
-        {
-            "name": "linux_gcc_release",
-            "configurePreset": "linux_gcc_release",
-            "configuration": "Release"
-        },
-        {
-            "name": "linux_gcc_release_asan",
-            "configurePreset": "linux_gcc_release_asan",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_arm64_debug",
-            "configurePreset": "macos_arm64_debug",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_arm64_debug_asan",
-            "configurePreset": "macos_arm64_debug_asan",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_arm64_release",
-            "configurePreset": "macos_arm64_release",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_arm64_release_asan",
-            "configurePreset": "macos_arm64_release_asan",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_universal2_debug",
-            "configurePreset": "macos_universal2_debug",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_universal2_debug_asan",
-            "configurePreset": "macos_universal2_debug_asan",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_universal2_release",
-            "configurePreset": "macos_universal2_release",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_universal2_release_asan",
-            "configurePreset": "macos_universal2_release_asan",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_x86_64_debug",
-            "configurePreset": "macos_x86_64_debug",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_x86_64_debug_asan",
-            "configurePreset": "macos_x86_64_debug_asan",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macos_x86_64_release",
-            "configurePreset": "macos_x86_64_release",
-            "configuration": "Release"
-        },
-        {
-            "name": "macos_x86_64_release_asan",
-            "configurePreset": "macos_x86_64_release_asan",
-            "configuration": "Release"
+          "type": "test",
+          "name": "linux_clang_debug_asan"
         }
-    ],
-    "testPresets": [
+      ]
+    },
+    {
+      "name": "linux_clang_debug_cov_no_ort_workflow",
+      "steps": [
         {
-            "name": "linux_clang_debug",
-            "configuration": "Debug",
-            "configurePreset": "linux_clang_debug"
+          "type": "configure",
+          "name": "linux_clang_debug_cov_no_ort"
         },
         {
-            "name": "linux_clang_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "linux_clang_debug_asan"
+          "type": "build",
+          "name": "linux_clang_debug_cov_no_ort"
         },
         {
-            "name": "linux_clang_debug_cov",
-            "configuration": "Debug",
-            "configurePreset": "linux_clang_debug_cov"
-        },
-        {
-            "name": "linux_gcc_debug",
-            "configuration": "Debug",
-            "configurePreset": "linux_gcc_debug"
-        },
-        {
-            "name": "linux_gcc_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "linux_gcc_debug_asan"
-        },
-        {
-            "name": "linux_gcc_release",
-            "configuration": "Release",
-            "configurePreset": "linux_gcc_release"
-        },
-        {
-            "name": "linux_gcc_release_asan",
-            "configuration": "Release",
-            "configurePreset": "linux_gcc_release_asan"
-        },
-        {
-            "name": "macos_arm64_debug",
-            "configuration": "Debug",
-            "configurePreset": "macos_arm64_debug"
-        },
-        {
-            "name": "macos_arm64_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "macos_arm64_debug_asan"
-        },
-        {
-            "name": "macos_arm64_release",
-            "configuration": "Release",
-            "configurePreset": "macos_arm64_release"
-        },
-        {
-            "name": "macos_arm64_release_asan",
-            "configuration": "Release",
-            "configurePreset": "macos_arm64_release_asan"
-        },
-        {
-            "name": "macos_universal2_debug",
-            "configuration": "Debug",
-            "configurePreset": "macos_universal2_debug"
-        },
-        {
-            "name": "macos_universal2_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "macos_universal2_debug_asan"
-        },
-        {
-            "name": "macos_universal2_release",
-            "configuration": "Release",
-            "configurePreset": "macos_universal2_release"
-        },
-        {
-            "name": "macos_universal2_release_asan",
-            "configuration": "Release",
-            "configurePreset": "macos_universal2_release_asan"
-        },
-        {
-            "name": "macos_x86_64_debug",
-            "configuration": "Debug",
-            "configurePreset": "macos_x86_64_debug"
-        },
-        {
-            "name": "macos_x86_64_debug_asan",
-            "configuration": "Debug",
-            "configurePreset": "macos_x86_64_debug_asan"
-        },
-        {
-            "name": "macos_x86_64_release",
-            "configuration": "Release",
-            "configurePreset": "macos_x86_64_release"
-        },
-        {
-            "name": "macos_x86_64_release_asan",
-            "configuration": "Release",
-            "configurePreset": "macos_x86_64_release_asan"
+          "type": "test",
+          "name": "linux_clang_debug_cov_no_ort"
         }
-    ],
-    "workflowPresets": [
+      ]
+    },
+    {
+      "name": "linux_clang_debug_cov_workflow",
+      "steps": [
         {
-            "name": "linux_clang_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_clang_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_clang_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_clang_debug_asan"
-                }
-            ]
+          "type": "configure",
+          "name": "linux_clang_debug_cov"
         },
         {
-            "name": "linux_clang_debug_cov_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_clang_debug_cov"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_clang_debug_cov"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_clang_debug_cov"
-                }
-            ]
+          "type": "build",
+          "name": "linux_clang_debug_cov"
         },
         {
-            "name": "linux_clang_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_clang_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_clang_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_clang_debug"
-                }
-            ]
-        },
-        {
-            "name": "linux_gcc_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_gcc_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_gcc_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_gcc_debug_asan"
-                }
-            ]
-        },
-        {
-            "name": "linux_gcc_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_gcc_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_gcc_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_gcc_debug"
-                }
-            ]
-        },
-        {
-            "name": "linux_gcc_release_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_gcc_release_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_gcc_release_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_gcc_release_asan"
-                }
-            ]
-        },
-        {
-            "name": "linux_gcc_release_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "linux_gcc_release"
-                },
-                {
-                    "type": "build",
-                    "name": "linux_gcc_release"
-                },
-                {
-                    "type": "test",
-                    "name": "linux_gcc_release"
-                }
-            ]
-        },
-        {
-            "name": "macos_arm64_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_arm64_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_arm64_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_arm64_debug_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_arm64_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_arm64_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_arm64_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_arm64_debug"
-                }
-            ]
-        },
-        {
-            "name": "macos_arm64_release_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_arm64_release_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_arm64_release_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_arm64_release_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_arm64_release_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_arm64_release"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_arm64_release"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_arm64_release"
-                }
-            ]
-        },
-        {
-            "name": "macos_universal2_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_universal2_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_universal2_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_universal2_debug_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_universal2_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_universal2_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_universal2_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_universal2_debug"
-                }
-            ]
-        },
-        {
-            "name": "macos_universal2_release_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_universal2_release_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_universal2_release_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_universal2_release_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_universal2_release_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_universal2_release"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_universal2_release"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_universal2_release"
-                }
-            ]
-        },
-        {
-            "name": "macos_x86_64_debug_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_x86_64_debug_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_x86_64_debug_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_x86_64_debug_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_x86_64_debug_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_x86_64_debug"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_x86_64_debug"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_x86_64_debug"
-                }
-            ]
-        },
-        {
-            "name": "macos_x86_64_release_asan_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_x86_64_release_asan"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_x86_64_release_asan"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_x86_64_release_asan"
-                }
-            ]
-        },
-        {
-            "name": "macos_x86_64_release_workflow",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "macos_x86_64_release"
-                },
-                {
-                    "type": "build",
-                    "name": "macos_x86_64_release"
-                },
-                {
-                    "type": "test",
-                    "name": "macos_x86_64_release"
-                }
-            ]
+          "type": "test",
+          "name": "linux_clang_debug_cov"
         }
-    ]
+      ]
+    },
+    {
+      "name": "linux_clang_debug_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_clang_debug_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_clang_debug_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_clang_debug_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_clang_debug_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_clang_debug"
+        },
+        {
+          "type": "build",
+          "name": "linux_clang_debug"
+        },
+        {
+          "type": "test",
+          "name": "linux_clang_debug"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_debug_asan_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_debug_asan_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_debug_asan_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_debug_asan_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_debug_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_debug_asan"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_debug_asan"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_debug_asan"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_debug_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_debug_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_debug_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_debug_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_debug_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_debug"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_debug"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_debug"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_minsizerel_asan_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_minsizerel_asan_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_minsizerel_asan_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_minsizerel_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_minsizerel_asan"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_minsizerel_asan"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_minsizerel_asan"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_minsizerel_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_minsizerel_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_minsizerel_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_minsizerel_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_minsizerel_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_minsizerel"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_minsizerel"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_minsizerel"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_release_asan_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_release_asan_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_release_asan_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_release_asan_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_release_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_release_asan"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_release_asan"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_release_asan"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_release_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_release_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_release_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_release_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_release_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_release"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_release"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_release"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_relwithdebinfo_asan_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_relwithdebinfo_asan_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_relwithdebinfo_asan_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_relwithdebinfo_asan"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_relwithdebinfo_asan"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_relwithdebinfo_asan"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_no_ort_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_relwithdebinfo_no_ort"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_relwithdebinfo_no_ort"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_relwithdebinfo_no_ort"
+        }
+      ]
+    },
+    {
+      "name": "linux_gcc_relwithdebinfo_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux_gcc_relwithdebinfo"
+        },
+        {
+          "type": "build",
+          "name": "linux_gcc_relwithdebinfo"
+        },
+        {
+          "type": "test",
+          "name": "linux_gcc_relwithdebinfo"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_debug_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_debug_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_debug_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_debug_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_debug_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_debug"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_debug"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_debug"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_minsizerel_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_minsizerel_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_minsizerel_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_minsizerel_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_minsizerel_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_minsizerel"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_minsizerel"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_minsizerel"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_release_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_release_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_release_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_release_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_release_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_release"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_release"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_release"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_relwithdebinfo_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_relwithdebinfo_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_relwithdebinfo_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_arm64_relwithdebinfo_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_arm64_relwithdebinfo"
+        },
+        {
+          "type": "build",
+          "name": "macos_arm64_relwithdebinfo"
+        },
+        {
+          "type": "test",
+          "name": "macos_arm64_relwithdebinfo"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_debug_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_debug_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_debug_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_debug_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_debug_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_debug"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_debug"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_debug"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_minsizerel_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_minsizerel_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_minsizerel_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_minsizerel_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_minsizerel_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_minsizerel"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_minsizerel"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_minsizerel"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_release_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_release_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_release_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_release_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_release_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_release"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_release"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_release"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_relwithdebinfo_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_relwithdebinfo_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_relwithdebinfo_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_universal2_relwithdebinfo_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_universal2_relwithdebinfo"
+        },
+        {
+          "type": "build",
+          "name": "macos_universal2_relwithdebinfo"
+        },
+        {
+          "type": "test",
+          "name": "macos_universal2_relwithdebinfo"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_debug_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_debug_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_debug_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_debug_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_debug_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_debug"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_debug"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_debug"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_minsizerel_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_minsizerel_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_minsizerel_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_minsizerel_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_minsizerel_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_minsizerel"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_minsizerel"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_minsizerel"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_release_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_release_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_release_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_release_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_release_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_release"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_release"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_release"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo_asan_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_relwithdebinfo_asan"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_relwithdebinfo_asan"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_relwithdebinfo_asan"
+        }
+      ]
+    },
+    {
+      "name": "macos_x86_64_relwithdebinfo_workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos_x86_64_relwithdebinfo"
+        },
+        {
+          "type": "build",
+          "name": "macos_x86_64_relwithdebinfo"
+        },
+        {
+          "type": "test",
+          "name": "macos_x86_64_relwithdebinfo"
+        }
+      ]
+    }
+  ]
 }
