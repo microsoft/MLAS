@@ -20,6 +20,15 @@ jobs:
          rm -rf build
          cmake --workflow --preset linux_gcc_release_workflow
 
+  Linux_x64_gcc_ubuntu24_release_no_ort:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+         set -e -x
+         rm -rf build
+         cmake --workflow --preset linux_gcc_release_no_ort_workflow
+
   Linux_x64_gcc_ubuntu24_release:
     runs-on: ubuntu-24.04
     permissions:
