@@ -16,7 +16,7 @@ Abstract:
 --*/
 
 #include "mlasi.h"
-
+#include <string.h>
 //
 // Define the prototypes of the platform optimized routines.
 //
