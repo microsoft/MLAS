@@ -416,7 +416,7 @@ void ThreadPool::ParallelForFixedBlockSizeScheduling(const std::ptrdiff_t total,
   }
 
   auto d_of_p = DegreeOfParallelism(this);
-  {
+  if (thread_options_.dynamic_block_base_ <= 0) {
     // Split the work across threads in the pool.  Each work item will run a loop claiming iterations,
     // hence we need at most one for each thread, even if the number of blocks of iterations is larger.
     auto num_blocks = total / block_size;
@@ -438,7 +438,29 @@ void ThreadPool::ParallelForFixedBlockSizeScheduling(const std::ptrdiff_t total,
     // threads is handled within RunInParallel, hence we can deallocate lc and other state captured by
     // run_work.
     RunInParallel(run_work, num_work_items, block_size);
-  } 
+  } else {
+    int num_of_blocks = d_of_p * thread_options_.dynamic_block_base_;
+    std::ptrdiff_t base_block_size = static_cast<std::ptrdiff_t>(std::max(1LL, std::llroundl(static_cast<long double>(total) / num_of_blocks)));
+    alignas(CACHE_LINE_BYTES) std::atomic<std::ptrdiff_t> left{total};
+    LoopCounter lc(total, d_of_p, base_block_size);
+    std::function<void(unsigned)> run_work = [&](unsigned idx) {
+      std::ptrdiff_t b = base_block_size;
+      unsigned my_home_shard = lc.GetHomeShard(idx);
+      unsigned my_shard = my_home_shard;
+      uint64_t my_iter_start, my_iter_end;
+      while (lc.ClaimIterations(my_home_shard, my_shard, my_iter_start, my_iter_end, b)) {
+        fn(static_cast<std::ptrdiff_t>(my_iter_start),
+           static_cast<std::ptrdiff_t>(my_iter_end));
+        auto todo = left.fetch_sub(static_cast<std::ptrdiff_t>(my_iter_end - my_iter_start), std::memory_order_relaxed);
+        if (b > 1) {
+          b = static_cast<std::ptrdiff_t>(std::max(1LL, std::llroundl(static_cast<long double>(todo) / num_of_blocks)));
+        }
+      }
+    };
+    // Distribute task among all threads in the pool, reduce number of work items if
+    // num_of_blocks is smaller than number of threads.
+    RunInParallel(run_work, std::min(NumThreads() + 1, num_of_blocks), base_block_size);
+  }
 }
 
 void ThreadPool::SimpleParallelFor(std::ptrdiff_t total, const std::function<void(std::ptrdiff_t)>& fn) {

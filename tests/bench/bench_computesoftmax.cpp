@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#include "mlasi.h"
+#include "core/mlas/lib/mlasi.h"
 #include "core/util/thread_utils.h"
-#include "bench_util.h"
+#include "test/mlas/bench/bench_util.h"
 
 using onnxruntime::narrow;
 
