@@ -148,22 +148,14 @@ class PosixThread : public EnvThread {
               unsigned (*start_address)(int id, Eigen::ThreadPoolInterface* param), Eigen::ThreadPoolInterface* param,
               const ThreadOptions& thread_options) {
     ORT_ENFORCE(index >= 0, "Negative thread index is not allowed");
-    custom_create_thread_fn = thread_options.custom_create_thread_fn;
-    custom_thread_creation_options = thread_options.custom_thread_creation_options;
-    custom_join_thread_fn = thread_options.custom_join_thread_fn;
+    
 
     auto param_ptr = std::make_unique<Param>(name_prefix, index, start_address, param);
     if (narrow<size_t>(index) < thread_options.affinities.size()) {
       param_ptr->affinity = thread_options.affinities[index];
     }
 
-    if (custom_create_thread_fn) {
-      custom_thread_handle = custom_create_thread_fn(custom_thread_creation_options, CustomThreadMain, param_ptr.get());
-      if (!custom_thread_handle) {
-        ORT_THROW("custom_create_thread_fn returned invalid handle.");
-      }
-      param_ptr.release();
-    } else {
+   {
       pthread_attr_t attr;
       int s = pthread_attr_init(&attr);
       if (s != 0) {
@@ -191,10 +183,7 @@ class PosixThread : public EnvThread {
   }
 
   ~PosixThread() override {
-    if (custom_thread_handle) {
-      custom_join_thread_fn(custom_thread_handle);
-      custom_thread_handle = nullptr;
-    } else {
+   {
       void* res;
 #ifdef NDEBUG
       pthread_join(hThread, &res);
@@ -423,38 +412,6 @@ class PosixEnv : public Env {
     return Status::OK();
   }
 
-  Status MapFileIntoMemory(const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
-                           MappedMemoryPtr& mapped_memory) const override {
-    ORT_RETURN_IF_NOT(file_path, "file_path == nullptr");
-    ORT_RETURN_IF_NOT(offset >= 0, "offset < 0");
-
-    ScopedFileDescriptor file_descriptor{open(file_path, O_RDONLY)};
-    if (!file_descriptor.IsValid()) {
-      return ReportSystemError("open", file_path);
-    }
-
-    if (length == 0) {
-      mapped_memory = MappedMemoryPtr{};
-      return Status::OK();
-    }
-
-    static const size_t page_size = narrow<size_t>(sysconf(_SC_PAGESIZE));
-    const FileOffsetType offset_to_page = offset % static_cast<FileOffsetType>(page_size);
-    const size_t mapped_length = length + static_cast<size_t>(offset_to_page);
-    const FileOffsetType mapped_offset = offset - offset_to_page;
-    void* const mapped_base =
-        mmap(nullptr, mapped_length, PROT_READ | PROT_WRITE, MAP_PRIVATE, file_descriptor.Get(), mapped_offset);
-
-    if (mapped_base == MAP_FAILED) {
-      return ReportSystemError("mmap", file_path);
-    }
-
-    mapped_memory =
-        MappedMemoryPtr{reinterpret_cast<char*>(mapped_base) + offset_to_page,
-                        OrtCallbackInvoker{OrtCallback{UnmapFile, new UnmapFileParam{mapped_base, mapped_length}}}};
-
-    return Status::OK();
-  }
 
   static common::Status ReportSystemError(const char* operation_name, const std::string& path) {
     auto [err_no, err_msg] = GetErrnoInfo();
@@ -580,10 +537,6 @@ class PosixEnv : public Env {
     return filename;
   }
 
-  // \brief returns a provider that will handle telemetry on the current platform
-  const Telemetry& GetTelemetryProvider() const override {
-    return telemetry_provider_;
-  }
 
   // \brief returns a value for the queried variable name (var_name)
   std::string GetEnvironmentVar(const std::string& var_name) const override {
@@ -592,7 +545,6 @@ class PosixEnv : public Env {
   }
 
  private:
-  Telemetry telemetry_provider_;
 #ifdef ORT_USE_CPUINFO
   PosixEnv() {
     cpuinfo_available_ = cpuinfo_initialize();

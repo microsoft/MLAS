@@ -4,8 +4,8 @@
 #include <stdexcept>
 #include <numeric>
 
-#include "core/mlas/inc/mlas_q4.h"
-#include "test/mlas/bench/bench_util.h"
+#include "mlas_q4.h"
+#include "bench_util.h"
 #include "core/util/thread_utils.h"
 
 static void BM_QDQBlockwiseQuantizer_QuantizeColumnwise(benchmark::State& state) {

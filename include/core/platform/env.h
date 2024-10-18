@@ -27,8 +27,6 @@ limitations under the License.
 #include "core/common/common.h"
 #include "core/common/path_string.h"
 #include "core/framework/callback.h"
-#include "core/platform/env_time.h"
-#include "core/platform/telemetry.h"
 #include "core/session/onnxruntime_c_api.h"
 
 #ifndef _WIN32
@@ -51,12 +49,6 @@ using FileOffsetType = off_t;
 class EnvThread {
  public:
   virtual ~EnvThread() = default;
-
- protected:
-  OrtCustomCreateThreadFn custom_create_thread_fn = nullptr;
-  void* custom_thread_creation_options = nullptr;
-  OrtCustomJoinThreadFn custom_join_thread_fn = nullptr;
-  OrtCustomThreadHandle custom_thread_handle = nullptr;
 };
 
 /// Type that holds a collection of logical processors IDs used for setting affinities.
@@ -87,10 +79,6 @@ struct ThreadOptions {
   // Set or unset denormal as zero.
   bool set_denormal_as_zero = false;
 
-  OrtCustomCreateThreadFn custom_create_thread_fn = nullptr;
-  void* custom_thread_creation_options = nullptr;
-  OrtCustomJoinThreadFn custom_join_thread_fn = nullptr;
-  int dynamic_block_base_ = 0;
 };
 
 std::ostream& operator<<(std::ostream& os, const LogicalProcessors&);
@@ -149,16 +137,6 @@ class Env {
 
   virtual int GetL2CacheSize() const = 0;
 
-  /// \brief Returns the number of micro-seconds since the Unix epoch.
-  virtual uint64_t NowMicros() const {
-    return env_time_->NowMicros();
-  }
-
-  /// \brief Returns the number of seconds since the Unix epoch.
-  virtual uint64_t NowSeconds() const {
-    return env_time_->NowSeconds();
-  }
-
   /// Sleeps/delays the thread for the prescribed number of micro-seconds.
   /// On Windows, it's the min time to sleep, not the actual one.
   virtual void SleepForMicroseconds(int64_t micros) const = 0;
@@ -179,20 +157,7 @@ class Env {
   virtual common::Status ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
                                             gsl::span<char> buffer) const = 0;
 
-  using MappedMemoryPtr = std::unique_ptr<char[], OrtCallbackInvoker>;
 
-  /**
-   * Maps the content of the file into memory.
-   * This is a copy-on-write mapping, so any changes are not written to the
-   * actual file.
-   * @param file_path The path to the file.
-   * @param offset The file offset from which to start the mapping.
-   * @param length The length in bytes of the mapping.
-   * @param[out] mapped_memory A smart pointer to the mapped memory which
-   *             unmaps the memory (unless release()'d) when destroyed.
-   */
-  virtual common::Status MapFileIntoMemory(_In_z_ const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
-                                           MappedMemoryPtr& mapped_memory) const = 0;
 
 #ifdef _WIN32
   /// \brief Returns true if the directory exists.
@@ -263,9 +228,6 @@ class Env {
   // returns the name that LoadDynamicLibrary() can use
   virtual std::string FormatLibraryFileName(const std::string& name, const std::string& version) const = 0;
 
-  // \brief returns a provider that will handle telemetry on the current platform
-  virtual const Telemetry& GetTelemetryProvider() const = 0;
-
   // \brief returns a value for the queried variable name (var_name)
   //
   // Returns the corresponding value stored in the environment variable if available
@@ -277,7 +239,6 @@ class Env {
 
  private:
   ORT_DISALLOW_COPY_ASSIGNMENT_AND_MOVE(Env);
-  EnvTime* env_time_ = EnvTime::Default();
 };
 
 }  // namespace onnxruntime
