@@ -10,7 +10,7 @@
 /* Modifications Copyright (c) Microsoft. */
 
 #include <type_traits>
-
+#include <cassert>
 #pragma once
 #include "onnxruntime_config.h"
 // build/external/eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvaluator.h:162:71:
