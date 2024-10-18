@@ -1,6 +1,11 @@
 include_directories(../../src/lib)
 add_executable(onnxruntime_mlas_benchmark bench_computesoftmax.cpp bench_main.cpp bench_q4dq.cpp bench_q4gemm.cpp bench_qgemm.cpp bench_sconv.cpp bench_sgemm.cpp bench_sqnbitgemm.cpp bench_symm_qgemm.cpp bench_util.cpp)
-target_link_libraries(onnxruntime_mlas_benchmark PRIVATE benchmark::benchmark ${ONNXRUNTIME_MLAS_LIBS} onnxruntime_common ${CMAKE_DL_LIBS})
+target_link_libraries(onnxruntime_mlas_benchmark PRIVATE benchmark::benchmark ${ONNXRUNTIME_MLAS_LIBS} )
+if(NOT MLAS_NO_ONNXRUNTIME)
+    target_link_libraries(onnxruntime_mlas_benchmark PRIVATE onnxruntime_common)
+endif()
+target_link_libraries(onnxruntime_mlas_benchmark PRIVATE ${CMAKE_DL_LIBS})
+
 target_compile_definitions(onnxruntime_mlas_benchmark PRIVATE BENCHMARK_STATIC_DEFINE)
 if(WIN32)
   target_link_libraries(onnxruntime_mlas_benchmark PRIVATE debug Dbghelp)

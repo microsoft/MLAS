@@ -42,7 +42,7 @@ set(ONNXRUNTIME_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ONNXRUNTIME_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 option(MLAS_ENABLE_WEBASSEMBLY_THREADS "Enable this option to create WebAssembly byte codes with multi-threads support" OFF)
 option(MLAS_ENABLE_WEBASSEMBLY_BROWSER_TESTS "Build all executables as html files" OFF)
-
+option(MLAS_NO_ONNXRUNTIME "Disable ORT related code" OFF)
 option(MLAS_ENABLE_WEBASSEMBLY_EXCEPTION_CATCHING "Enable this option to turn on exception catching" OFF)
 
 if(MLAS_ENABLE_WEBASSEMBLY_BROWSER_TESTS)
@@ -65,8 +65,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
 endif()
 
 include(cmake/external_deps.cmake)
-include_directories(${eigen_SOURCE_DIR})
+if(NOT MLAS_NO_ONNXRUNTIME)
+  include_directories(${eigen_SOURCE_DIR})
+endif()
 
+if(MLAS_NO_ONNXRUNTIME)
+  add_compile_options(-DBUILD_MLAS_NO_ONNXRUNTIME)
+endif()
 add_compile_options(-DNSYNC_ATOMIC_CPP11 -DDISABLE_ABSEIL)
 set(ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas)
 add_subdirectory(src)
