@@ -15,7 +15,7 @@ Abstract:
 --*/
 
 #pragma once
-
+#include <cstring>
 #include "test_fp16.h"
 
 /**
