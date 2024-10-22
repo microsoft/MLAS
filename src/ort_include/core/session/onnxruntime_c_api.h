@@ -32,3 +32,16 @@
 #else
 #define ORTCHAR_T char
 #endif
+
+/// ORTCHAR_T, ORT_TSTR are reserved specifically for path handling.
+/// All other strings are UTF-8 encoded, use char and std::string
+#ifndef ORT_TSTR
+#ifdef _WIN32
+#define ORT_TSTR(X) L##X
+// When X is a macro, L##X is not defined. In this case, we need to use ORT_TSTR_ON_MACRO.
+#define ORT_TSTR_ON_MACRO(X) L"" X
+#else
+#define ORT_TSTR(X) X
+#define ORT_TSTR_ON_MACRO(X) X
+#endif
+#endif

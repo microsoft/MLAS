@@ -420,60 +420,6 @@ class PosixEnv : public Env {
     return common::Status(common::SYSTEM, err_no, oss.str());
   }
 
-  bool FolderExists(const std::string& path) const override {
-    struct stat sb;
-    if (stat(path.c_str(), &sb)) {
-      return false;
-    }
-    return S_ISDIR(sb.st_mode);
-  }
-
-  common::Status CreateFolder(const std::string& path) const override {
-    size_t pos = 0;
-    do {
-      pos = path.find_first_of("\\/", pos + 1);
-      std::string directory = path.substr(0, pos);
-      if (FolderExists(directory.c_str())) {
-        continue;
-      }
-      if (mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
-        return common::Status(common::SYSTEM, errno);
-      }
-    } while (pos != std::string::npos);
-    return Status::OK();
-  }
-
-  common::Status DeleteFolder(const PathString& path) const override {
-    const auto result = nftw(
-        path.c_str(), &nftw_remove, 32, FTW_DEPTH | FTW_PHYS);
-    ORT_RETURN_IF_NOT(result == 0, "DeleteFolder(): nftw() failed with error: ", result);
-    return Status::OK();
-  }
-
-  common::Status FileOpenRd(const std::string& path, /*out*/ int& fd) const override {
-    fd = open(path.c_str(), O_RDONLY);
-    if (0 > fd) {
-      return ReportSystemError("open", path);
-    }
-    return Status::OK();
-  }
-
-  common::Status FileOpenWr(const std::string& path, /*out*/ int& fd) const override {
-    fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (0 > fd) {
-      return ReportSystemError("open", path);
-    }
-    return Status::OK();
-  }
-
-  common::Status FileClose(int fd) const override {
-    int ret = close(fd);
-    if (0 != ret) {
-      return ReportSystemError("close", "");
-    }
-    return Status::OK();
-  }
-
   common::Status GetCanonicalPath(
       const PathString& path,
       PathString& canonical_path) const override {

@@ -13,7 +13,6 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-#include "core/platform/windows/logging/etw_sink.h"
 #else
 #include <unistd.h>
 #if defined(__MACH__) || defined(__wasm__) || defined(_AIX)
@@ -250,36 +249,6 @@ unsigned int GetProcessId() {
 #endif
 }
 
-std::unique_ptr<ISink> EnhanceSinkWithEtw(std::unique_ptr<ISink> existing_sink, logging::Severity original_severity,
-                                          logging::Severity etw_severity) {
-#ifdef _WIN32
-  auto& manager = EtwRegistrationManager::Instance();
-  if (manager.IsEnabled()) {
-    auto compositeSink = std::make_unique<CompositeSink>();
-    compositeSink->AddSink(std::move(existing_sink), original_severity);
-    compositeSink->AddSink(std::make_unique<EtwSink>(), etw_severity);
-    return compositeSink;
-  } else {
-    return existing_sink;
-  }
-#else
-  // On non-Windows platforms, just return the existing logger
-  (void)original_severity;
-  (void)etw_severity;
-  return existing_sink;
-#endif  // _WIN32
-}
-
-Severity OverrideLevelWithEtw(Severity original_severity) {
-#ifdef _WIN32
-  auto& manager = logging::EtwRegistrationManager::Instance();
-  if (manager.IsEnabled() &&
-      (manager.Keyword() & static_cast<ULONGLONG>(onnxruntime::logging::ORTTraceLoggingKeyword::Logs)) != 0) {
-    return manager.MapLevelToSeverity();
-  }
-#endif  // _WIN32
-  return original_severity;
-}
 
 bool LoggingManager::AddSinkOfType(SinkType sink_type, std::function<std::unique_ptr<ISink>()> sinkFactory,
                                    logging::Severity severity) {

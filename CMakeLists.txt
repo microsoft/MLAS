@@ -67,6 +67,7 @@ endif()
 include(cmake/external_deps.cmake)
 if(NOT MLAS_NO_ONNXRUNTIME)
   include_directories(${eigen_SOURCE_DIR})
+  include_directories(src/ort_include)
 endif()
 
 if(MLAS_NO_ONNXRUNTIME)

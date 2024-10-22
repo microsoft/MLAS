@@ -85,7 +85,7 @@ using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
 #endif
 #endif  // __APPLE__
 
-#if ORT_USE_CXX20_STD_CHRONO
+#if _WIN32 || ORT_USE_CXX20_STD_CHRONO
 namespace timestamp_ns = std::chrono;
 #else
 namespace timestamp_ns = ::date;
