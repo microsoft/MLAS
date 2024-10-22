@@ -65,7 +65,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   endif()
 endif()
 
-include(cmake/external_deps.cmake)
+if(NOT TARGET onnxruntime_common)
+  # ONNX Runtime already has the dependencies
+  include(cmake/external_deps.cmake)
+endif()
 if(NOT MLAS_NO_ONNXRUNTIME)
   include_directories(${eigen_SOURCE_DIR})
   include_directories(src/ort_include)
