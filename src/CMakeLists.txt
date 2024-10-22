@@ -1,4 +1,4 @@
-if(NOT MLAS_NO_ONNXRUNTIME)
+if(NOT MLAS_NO_ONNXRUNTIME AND NOT TARGET onnxruntime_common)
     set(onnxruntime_common_src_patterns
         "${ONNXRUNTIME_INCLUDE_DIR}/core/common/*.h"
         "${ONNXRUNTIME_INCLUDE_DIR}/core/common/logging/*.h"
