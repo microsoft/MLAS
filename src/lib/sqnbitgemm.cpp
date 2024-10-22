@@ -19,6 +19,7 @@ Abstract:
 #include "sqnbitgemm_q8_block.h"
 
 #include <cassert>
+#include <array>
 
 namespace
 {

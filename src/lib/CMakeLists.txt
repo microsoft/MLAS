@@ -3,9 +3,39 @@
 
 set(MLAS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 set(MLAS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(MLAS_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
+set(MLAS_INC_DIR ${MLAS_ROOT}/../include)
 
 include_directories(${ONNXRUNTIME_INCLUDE_DIR})
+
+#Set global compile flags for all the source code(including third_party code like protobuf)
+#This section must be before any add_subdirectory, otherwise build may fail because /MD,/MT mismatch
+if (MSVC)
+  if (CMAKE_VS_PLATFORM_NAME)
+    # Multi-platform generator
+    set(onnxruntime_target_platform ${CMAKE_VS_PLATFORM_NAME})
+  else()
+    set(onnxruntime_target_platform ${CMAKE_SYSTEM_PROCESSOR})
+  endif()
+  if (onnxruntime_target_platform STREQUAL "ARM64")
+    set(onnxruntime_target_platform "ARM64")
+    enable_language(ASM_MARMASM)
+  elseif (onnxruntime_target_platform STREQUAL "ARM64EC")
+    enable_language(ASM_MARMASM)
+  elseif (onnxruntime_target_platform STREQUAL "ARM" OR CMAKE_GENERATOR MATCHES "ARM")
+    set(onnxruntime_target_platform "ARM")
+    enable_language(ASM_MARMASM)
+  elseif (onnxruntime_target_platform STREQUAL "x64" OR onnxruntime_target_platform STREQUAL "x86_64" OR onnxruntime_target_platform STREQUAL "AMD64" OR CMAKE_GENERATOR MATCHES "Win64")
+    set(onnxruntime_target_platform "x64")
+    enable_language(ASM_MASM)
+  elseif (onnxruntime_target_platform STREQUAL "Win32" OR onnxruntime_target_platform STREQUAL "x86" OR onnxruntime_target_platform STREQUAL "i386" OR onnxruntime_target_platform STREQUAL "i686")
+    set(onnxruntime_target_platform "x86")
+    enable_language(ASM_MASM)
+    message("Enabling SAFESEH for x86 build")
+    set(CMAKE_ASM_MASM_FLAGS "${CMAKE_ASM_MASM_FLAGS} /safeseh")
+  else()
+    message(FATAL_ERROR "Unknown CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
+  endif()
+endif()
 
 #
 # All hardware agnostic source files here
@@ -721,7 +751,6 @@ block()
       endif()
     endforeach()
   endforeach()
-  source_group(TREE ${MLAS_ROOT} FILES ${source_group_srcs})
 endblock()
 
 

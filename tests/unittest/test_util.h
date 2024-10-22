@@ -14,6 +14,8 @@
 #include <memory>
 #include <random>
 #include <sstream>
+#include <stdexcept>
+
 #if defined(_WIN32)
 #include <windows.h>
 #else
@@ -33,6 +35,40 @@
 
 #if !defined(_countof)
 #define _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
+#endif
+
+#ifndef MLAS_THROW_EX
+#ifdef MLAS_NO_EXCEPTION
+
+MLAS_FORCEINLINE
+void
+MlasPrintFinalMessage(const std::string& msg)
+{
+#if defined(__ANDROID__)
+    __android_log_print(ANDROID_LOG_ERROR, "mlas", "%s", msg.c_str());
+#else
+    // TODO, consider changing the output of the error message from std::cerr to logging when the
+    // exceptions are disabled, since using std::cerr might increase binary size, and std::cerr
+    // output might not be easily accesible on some systems such as mobile
+    // TODO, see if we need to change the output of the error message from std::cerr to NSLog for
+    // iOS
+    std::cerr << msg << std::endl;
+#endif
+}
+
+#define MLAS_THROW_EX(ex, what)     \
+    do {                            \
+        std::string msg = #ex;      \
+        msg.append(what);           \
+        MlasPrintFinalMessage(msg); \
+        abort();                    \
+    } while (false)
+
+#else
+
+#define MLAS_THROW_EX(ex, ...) throw ex(__VA_ARGS__)
+
+#endif  // MLAS_NO_EXCEPTION
 #endif
 
 MLAS_THREADPOOL* GetMlasThreadPool(void);
@@ -87,7 +123,7 @@ class MatrixGuardBuffer {
 
 #if defined(_WIN32)
       if (VirtualAlloc(_BaseBuffer, BytesToAllocate, MEM_COMMIT, PAGE_READWRITE) == nullptr) {
-        ORT_THROW_EX(std::bad_alloc);
+        MLAS_THROW_EX(std::bad_alloc);
       }
 #else
       if (mprotect(_BaseBuffer, BytesToAllocate, PROT_READ | PROT_WRITE) != 0) {

@@ -60,6 +60,10 @@ if(NOT MLAS_NO_ONNXRUNTIME)
 
     target_include_directories(onnxruntime_common
             PRIVATE ${ONNXRUNTIME_INCLUDE_DIR} ${ONNXRUNTIME_ROOT} ${eigen_SOURCE_DIR})
-    target_link_libraries(onnxruntime_common PUBLIC Microsoft.GSL::GSL)
+    if(WIN32)
+      target_compile_definitions(onnxruntime_common PRIVATE NOMINMAX)
+    endif()
+    target_link_libraries(onnxruntime_common PUBLIC Microsoft.GSL::GSL ${WIL_TARGET})
 endif()
 add_subdirectory(lib)
+

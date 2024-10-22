@@ -15,7 +15,6 @@ limitations under the License.
 // Portions Copyright (c) Microsoft Corporation
 
 #include "core/platform/env.h"
-#include "core/platform/windows/telemetry.h"
 #include "core/common/inlined_containers.h"
 #include <Windows.h>
 
@@ -62,27 +61,14 @@ class WindowsEnv : public Env {
   common::Status GetFileLength(int fd, /*out*/ size_t& file_size) const override;
   Status ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* const file_path, const FileOffsetType offset, const size_t length,
                             const gsl::span<char> buffer) const override;
-  Status MapFileIntoMemory(_In_z_ const ORTCHAR_T* file_path,
-                           FileOffsetType offset,
-                           size_t length,
-                           MappedMemoryPtr& mapped_memory) const override;
-  bool FolderExists(const std::wstring& path) const override;
-  bool FolderExists(const std::string& path) const override;
-  common::Status CreateFolder(const std::wstring& path) const override;
-  common::Status CreateFolder(const std::string& path) const override;
-  common::Status DeleteFolder(const PathString& path) const override;
-  common::Status FileOpenRd(const std::wstring& path, /*out*/ int& fd) const override;
-  common::Status FileOpenWr(const std::wstring& path, /*out*/ int& fd) const override;
-  common::Status FileOpenRd(const std::string& path, /*out*/ int& fd) const override;
-  common::Status FileOpenWr(const std::string& path, /*out*/ int& fd) const override;
-  common::Status FileClose(int fd) const override;
+ 
+  
   common::Status GetCanonicalPath(const PathString& path, PathString& canonical_path) const override;
   PathString GetRuntimePath() const override;
   Status LoadDynamicLibrary(const PathString& library_filename, bool /*global_symbols*/, void** handle) const override;
   Status UnloadDynamicLibrary(void* handle) const override;
   Status GetSymbolFromLibrary(void* handle, const std::string& symbol_name, void** symbol) const override;
   std::string FormatLibraryFileName(const std::string& name, const std::string& version) const override;
-  const Telemetry& GetTelemetryProvider() const override;
   std::string GetEnvironmentVar(const std::string& var_name) const override;
   ProcessorInfo GetProcessorAffinityMask(int global_processor_id) const;
 
@@ -136,7 +122,6 @@ class WindowsEnv : public Env {
  private:
   void InitializeCpuInfo();
   typedef VOID(WINAPI* FnGetSystemTimePreciseAsFileTime)(LPFILETIME);
-  WindowsTelemetry telemetry_provider_;
 };
 
 }  // namespace onnxruntime

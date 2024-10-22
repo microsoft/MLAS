@@ -38,6 +38,9 @@ if(MSVC)
   target_compile_options(mlas_unittest PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:SHELL:--compiler-options /wd26426>"
 			  "$<$<NOT:$<COMPILE_LANGUAGE:CUDA>>:/wd26426>")
 endif()
+if(WIN32)
+  target_compile_definitions(mlas_unittest PRIVATE -DNOMINMAX)
+endif()
 if(IOS)
   set_target_properties(mlas_unittest PROPERTIES
 	XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO"

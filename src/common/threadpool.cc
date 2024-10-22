@@ -24,7 +24,8 @@ limitations under the License.
 #include "core/platform/ort_mutex.h"
 #if !defined(ORT_MINIMAL_BUILD)
 #ifdef _WIN32
-#include "processthreadsapi.h"
+#include <Windows.h>
+#include <processthreadsapi.h>
 #include <codecvt>
 #include <locale>
 #elif defined(__APPLE__)
