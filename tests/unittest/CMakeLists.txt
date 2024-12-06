@@ -26,6 +26,7 @@ test_sbgemm.cpp
 test_scaleoutput.cpp
 test_softmax.cpp
 test_sqnbitgemm.cpp
+test_hqnbitgemm_neon.cpp
 test_symm_qgemm.cpp
 test_transpose.cpp)
 if(MSVC)
