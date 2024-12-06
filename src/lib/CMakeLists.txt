@@ -68,7 +68,6 @@ add_library(onnxruntime_mlas STATIC
   ${MLAS_SRC_DIR}/qpostprocessor.cpp
   ${MLAS_SRC_DIR}/qlgavgpool.cpp
   ${MLAS_SRC_DIR}/qdwconv_kernelsize.cpp
-  ${MLAS_SRC_DIR}/qnbitgemm.h
   ${MLAS_SRC_DIR}/qnbitgemm.cpp
   ${MLAS_SRC_DIR}/sqnbitgemm_q8_block.h
   ${MLAS_SRC_DIR}/flashattn.cpp
