@@ -16,7 +16,6 @@ Abstract:
 --*/
 
 #pragma once
-#include <stdlib.h>
 
 template<typename T>
 class MLAS_GEMM_POSTPROCESSOR

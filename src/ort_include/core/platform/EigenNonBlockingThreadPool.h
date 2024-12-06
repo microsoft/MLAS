@@ -50,7 +50,6 @@
 #include "core/common/denormal.h"
 #include "core/common/inlined_containers_fwd.h"
 #include "core/common/spin_pause.h"
-#include "core/platform/ort_mutex.h"
 #include "core/platform/ort_spin_lock.h"
 
 // ORT thread pool overview
@@ -459,7 +458,7 @@ class RunQueue {
 #ifdef USE_LOCK_FREE_QUEUE
     std::lock_guard<OrtSpinLock> mtx(spin_lock_);
 #else
-    std::lock_guard<OrtMutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 #endif
     unsigned back = back_.load(std::memory_order_relaxed);
     Elem& e = array_[(back - 1) & kMask];
@@ -483,7 +482,7 @@ class RunQueue {
 #ifdef USE_LOCK_FREE_QUEUE
     std::lock_guard<OrtSpinLock> mtx(spin_lock_);
 #else
-    std::lock_guard<OrtMutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 #endif
     unsigned back = back_.load(std::memory_order_relaxed);
     w_idx = (back - 1) & kMask;
@@ -508,7 +507,7 @@ class RunQueue {
 #ifdef USE_LOCK_FREE_QUEUE
     std::lock_guard<OrtSpinLock> mtx(spin_lock_);
 #else
-    std::lock_guard<OrtMutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 #endif
     unsigned back;
     Elem* e;
@@ -554,7 +553,7 @@ class RunQueue {
 #ifdef USE_LOCK_FREE_QUEUE
     std::lock_guard<OrtSpinLock> mtx(spin_lock_);
 #else
-    std::lock_guard<OrtMutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 #endif
     Elem& e = array_[w_idx];
     ElemState s = e.state.load(std::memory_order_relaxed);
@@ -630,7 +629,7 @@ class RunQueue {
 #ifdef USE_LOCK_FREE_QUEUE
   OrtSpinLock spin_lock_;
 #else
-  OrtMutex mutex_;
+  std::mutex mutex_;
 #endif
 
   // Low log(kSize) + 1 bits in front_ and back_ contain rolling index of
@@ -1439,7 +1438,7 @@ class ThreadPoolTempl : public onnxruntime::concurrency::ExtendedThreadPoolInter
       ThreadStatus seen = GetStatus();
       if (seen == ThreadStatus::Blocking ||
           seen == ThreadStatus::Blocked) {
-        std::unique_lock<OrtMutex> lk(mutex);
+        std::unique_lock<std::mutex> lk(mutex);
         // Blocking state exists only transiently during the SetBlock() method
         // while holding the lock.  We may observe it at the start of this
         // function, but after acquiring the lock then the target thread
@@ -1469,7 +1468,7 @@ class ThreadPoolTempl : public onnxruntime::concurrency::ExtendedThreadPoolInter
 
     void SetBlocked(std::function<bool()> should_block,
                     std::function<void()> post_block) {
-      std::unique_lock<OrtMutex> lk(mutex);
+      std::unique_lock<std::mutex> lk(mutex);
       assert(GetStatus() == ThreadStatus::Spinning);
       status.store(ThreadStatus::Blocking, std::memory_order_relaxed);
       if (should_block()) {
@@ -1484,8 +1483,8 @@ class ThreadPoolTempl : public onnxruntime::concurrency::ExtendedThreadPoolInter
 
    private:
     std::atomic<ThreadStatus> status{ThreadStatus::Spinning};
-    OrtMutex mutex;
-    OrtCondVar cv;
+    std::mutex mutex;
+    std::condition_variable cv;
   };
 
   Environment& env_;
