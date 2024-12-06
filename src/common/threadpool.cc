@@ -25,7 +25,7 @@ limitations under the License.
 #if !defined(ORT_MINIMAL_BUILD)
 #ifdef _WIN32
 #include <Windows.h>
-#include "processthreadsapi.h"
+#include <processthreadsapi.h>
 #include <codecvt>
 #include <locale>
 #elif defined(__APPLE__)
