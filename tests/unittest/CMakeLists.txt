@@ -26,6 +26,7 @@ test_sbgemm.cpp
 test_scaleoutput.cpp
 test_softmax.cpp
 test_sqnbitgemm.cpp
+test_hqnbitgemm_neon.cpp
 test_symm_qgemm.cpp
 test_transpose.cpp)
 if(MSVC)
@@ -46,7 +47,7 @@ if(IOS)
 	XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO"
   )
 endif()
-target_include_directories(mlas_unittest PRIVATE ${ONNXRUNTIME_ROOT}/core/mlas/inc ${ONNXRUNTIME_ROOT}
+target_include_directories(mlas_unittest PRIVATE ${ONNXRUNTIME_ROOT}/lib ${ONNXRUNTIME_ROOT}
 		${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(mlas_unittest PRIVATE GTest::gtest GTest::gmock ${ONNXRUNTIME_MLAS_LIBS})
 if(NOT MLAS_NO_ONNXRUNTIME)

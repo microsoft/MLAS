@@ -1,5 +1,5 @@
 include_directories(../../src/lib)
-add_executable(onnxruntime_mlas_benchmark bench_computesoftmax.cpp bench_main.cpp bench_q4dq.cpp bench_q4gemm.cpp bench_qgemm.cpp bench_sconv.cpp bench_sgemm.cpp bench_sqnbitgemm.cpp bench_symm_qgemm.cpp bench_util.cpp)
+add_executable(onnxruntime_mlas_benchmark bench_computesoftmax.cpp bench_main.cpp bench_q4dq.cpp bench_q4gemm.cpp bench_qgemm.cpp bench_sconv.cpp bench_sgemm.cpp bench_qnbitgemm.cpp bench_symm_qgemm.cpp bench_util.cpp)
 target_link_libraries(onnxruntime_mlas_benchmark PRIVATE benchmark::benchmark ${ONNXRUNTIME_MLAS_LIBS} )
 if(NOT MLAS_NO_ONNXRUNTIME)
     target_link_libraries(onnxruntime_mlas_benchmark PRIVATE onnxruntime_common)
