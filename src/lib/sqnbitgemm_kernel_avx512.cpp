@@ -19,6 +19,8 @@ Abstract:
 #include <cassert>
 #include <utility>
 #include <cstdlib>
+#include <cstring>
+
 #include "qnbitgemm.h"
 #include "sqnbitgemm_kernel_avx_common.h"
 #include "sqnbitgemm_kernel_avx_common_int8.h"
