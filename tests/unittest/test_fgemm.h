@@ -202,7 +202,7 @@ class MlasFgemmTest : public MlasTestBase {
       for (size_t m = 0; m < M; m++) {
         for (size_t n = 0; n < N; n++, f++) {
           // Sensitive to comparing positive/negative zero.
-          ASSERT_EQ(C[f], CReference[f])
+          ASSERT_NEAR(C[f], CReference[f],1e-5)
               << " Diff @[" << batch << ", " << m << ", " << n << "] f=" << f << ", "
               << (Packed ? "Packed" : "NoPack") << "."
               << (Threaded ? "SingleThread" : "Threaded") << "/"

@@ -37,7 +37,9 @@
 #endif
 
 MLAS_THREADPOOL* GetMlasThreadPool(void);
-
+#ifdef BUILD_MLAS_NO_ONNXRUNTIME
+#include "matrix_buffer.h"
+#else
 template <typename T>
 class MatrixGuardBuffer {
  public:
@@ -163,7 +165,7 @@ class MatrixGuardBuffer {
   size_t _BaseBufferSize;
   T* _GuardAddress;
 };
-
+#endif
 class MlasTestBase {
  public:
   virtual ~MlasTestBase(void) {}
