@@ -42,7 +42,7 @@ endif()
 # hardware specific files would cause trouble in
 # multi-target build
 #
-add_library(onnxruntime_mlas STATIC
+onnxruntime_add_static_library(onnxruntime_mlas
   ${MLAS_SRC_DIR}/mlasi.h
   ${MLAS_SRC_DIR}/platform.cpp
   ${MLAS_SRC_DIR}/threading.cpp
@@ -500,7 +500,7 @@ else()
         endif()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
-            add_library(onnxruntime_mlas_arm STATIC64 ${mlas_platform_srcs})
+            onnxruntime_add_static_library(onnxruntime_mlas_arm64  ${mlas_platform_srcs})
             set_target_properties(onnxruntime_mlas_arm64 PROPERTIES OSX_ARCHITECTURES "arm64")
             list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_arm64)
             set(mlas_platform_srcs )
@@ -756,7 +756,7 @@ endif()
         endif()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
-          add_library(onnxruntime_mlas_x STATIC86_64 ${mlas_platform_srcs})
+          onnxruntime_add_static_library(onnxruntime_mlas_x64 ${mlas_platform_srcs})
           set_target_properties(onnxruntime_mlas_x86_64 PROPERTIES OSX_ARCHITECTURES "x86_64")
           list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_x86_64)
           set(mlas_platform_srcs )

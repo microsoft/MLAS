@@ -62,28 +62,13 @@ namespace {
 
 constexpr int OneMillion = 1000000;
 
-class UnmapFileParam {
- public:
-  void* addr;
-  size_t len;
-};
-
-static void UnmapFile(void* param) noexcept {
-  std::unique_ptr<UnmapFileParam> p(reinterpret_cast<UnmapFileParam*>(param));
-  int ret = munmap(p->addr, p->len);
-  if (ret != 0) {
-    auto [err_no, err_msg] = GetErrnoInfo();
-    LOGS_DEFAULT(ERROR) << "munmap failed. error code: " << err_no << " error msg: " << err_msg;
-  }
-}
-
 struct FileDescriptorTraits {
   using Handle = int;
   static Handle GetInvalidHandleValue() { return -1; }
   static void CleanUp(Handle h) {
     if (close(h) == -1) {
       auto [err_no, err_msg] = GetErrnoInfo();
-      LOGS_DEFAULT(ERROR) << "Failed to close file descriptor " << h << " - error code: " << err_no
+      std::cout << "Failed to close file descriptor " << h << " - error code: " << err_no
                           << " error msg: " << err_msg;
     }
   }
@@ -207,7 +192,7 @@ class PosixThread : public EnvThread {
           } else {
             // Logical processor id starts from 0 internally, but in ort API, it starts from 1,
             // that's why id need to increase by 1 when logging.
-            LOGS_DEFAULT(ERROR) << "cpu " << id + 1 << " does not exist, skipping it for affinity setting";
+            std::cout << "cpu " << id + 1 << " does not exist, skipping it for affinity setting";
           }
         }
         auto ret = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
@@ -219,7 +204,7 @@ class PosixThread : public EnvThread {
           errno = ret;
           auto [err_no, err_msg] = GetErrnoInfo();
 #if !defined(USE_MIGRAPHX)
-          LOGS_DEFAULT(ERROR) << "pthread_setaffinity_np failed for thread: " << syscall(SYS_gettid)
+          std::cout << "pthread_setaffinity_np failed for thread: " << syscall(SYS_gettid)
                               << ", index: " << p->index
                               << ", mask: " << *p->affinity
                               << ", error code: " << err_no << " error msg: " << err_msg
@@ -427,58 +412,6 @@ class PosixEnv : public Env {
     }
     canonical_path.assign(canonical_path_cstr.get());
     return Status::OK();
-  }
-
-  common::Status LoadDynamicLibrary(const PathString& library_filename, bool global_symbols, void** handle) const override {
-    dlerror();  // clear any old error_str
-    *handle = dlopen(library_filename.c_str(), RTLD_NOW | (global_symbols ? RTLD_GLOBAL : RTLD_LOCAL));
-    char* error_str = dlerror();
-    if (!*handle) {
-      return common::Status(common::ONNXRUNTIME, common::FAIL,
-                            "Failed to load library " + library_filename + " with error: " + error_str);
-    }
-    return common::Status::OK();
-  }
-
-  common::Status UnloadDynamicLibrary(void* handle) const override {
-    if (!handle) {
-      return common::Status(common::ONNXRUNTIME, common::FAIL, "Got null library handle");
-    }
-    dlerror();  // clear any old error_str
-    int retval = dlclose(handle);
-    char* error_str = dlerror();
-    if (retval != 0) {
-      return common::Status(common::ONNXRUNTIME, common::FAIL,
-                            "Failed to unload library with error: " + std::string(error_str));
-    }
-    return common::Status::OK();
-  }
-
-  common::Status GetSymbolFromLibrary(void* handle, const std::string& symbol_name, void** symbol) const override {
-    dlerror();  // clear any old error str
-
-    // search global space if handle is nullptr.
-    // value of RTLD_DEFAULT differs across posix platforms (-2 on macos, 0 on linux).
-    handle = handle ? handle : RTLD_DEFAULT;
-    *symbol = dlsym(handle, symbol_name.c_str());
-
-    char* error_str = dlerror();
-    if (error_str) {
-      return common::Status(common::ONNXRUNTIME, common::FAIL,
-                            "Failed to get symbol " + symbol_name + " with error: " + error_str);
-    }
-    // it's possible to get a NULL symbol in our case when Schemas are not custom.
-    return common::Status::OK();
-  }
-
-  std::string FormatLibraryFileName(const std::string& name, const std::string& version) const override {
-    std::string filename;
-    if (version.empty()) {
-      filename = "lib" + name + ".so";
-    } else {
-      filename = "lib" + name + ".so" + "." + version;
-    }
-    return filename;
   }
 
   // \brief returns a value for the queried variable name (var_name)

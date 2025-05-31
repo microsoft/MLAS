@@ -1,6 +1,6 @@
 find_package(GTest)
 
-add_executable(mlas_unittest test_activation.cpp
+onnxruntime_add_executable(mlas_unittest test_activation.cpp
 test_blkq8.cpp
 test_blockq4.cpp
 test_conv2d.cpp

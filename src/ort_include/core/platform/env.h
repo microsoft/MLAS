@@ -166,21 +166,7 @@ class Env {
   // This functions is always successful. It can't fail.
   virtual PIDType GetSelfPid() const = 0;
 
-  // \brief Load a dynamic library.
-  //
-  // Pass "library_filename" to a platform-specific mechanism for dynamically
-  // loading a library.  The rules for determining the exact location of the
-  // library are platform-specific and are not documented here.
-  //
-  // global_symbols only has an effect on unix, where a value of true means to load with RTLD_GLOBAL vs RTLD_LOCAL
-  //
-  // On success, returns a handle to the library in "*handle" and returns
-  // OK from the function.
-  // Otherwise returns nullptr in "*handle" and an error status from the
-  // function.
-  virtual common::Status LoadDynamicLibrary(const PathString& library_filename, bool global_symbols, void** handle) const = 0;
-
-  virtual common::Status UnloadDynamicLibrary(void* handle) const = 0;
+  
 
   // \brief Gets the file path of the onnx runtime code
   //
@@ -188,20 +174,7 @@ class Env {
   // The DNNL provider shared library. Without this path, the module won't be found on windows in all cases.
   virtual PathString GetRuntimePath() const { return PathString(); }
 
-  // \brief Get a pointer to a symbol from a dynamic library.
-  //
-  // "handle" should be a pointer returned from a previous call to LoadDynamicLibrary.
-  // On success, store a pointer to the located symbol in "*symbol" and return
-  // OK from the function. Otherwise, returns nullptr in "*symbol" and an error
-  // status from the function.
-  virtual common::Status GetSymbolFromLibrary(void* handle, const std::string& symbol_name, void** symbol) const = 0;
 
-  // \brief build the name of dynamic library.
-  //
-  // "name" should be name of the library.
-  // "version" should be the version of the library or NULL
-  // returns the name that LoadDynamicLibrary() can use
-  virtual std::string FormatLibraryFileName(const std::string& name, const std::string& version) const = 0;
 
   // \brief returns a value for the queried variable name (var_name)
   //

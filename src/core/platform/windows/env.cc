@@ -32,34 +32,16 @@ limitations under the License.
 #include "core/common/span_utils.h"
 #include "core/platform/env.h"
 #include "core/platform/scoped_resource.h"
-#if defined(_M_X64) && !defined(_M_ARM64EC)
-#include "core/platform/windows/hardware_core_enumerator.h"
-#endif
+
 #include <unsupported/Eigen/CXX11/ThreadPool>
 #include <wil/Resource.h>
 
 #include "core/platform/path_lib.h"  // for LoopDir()
-#include "core/platform/windows/dll_load_error.h"
 
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 namespace onnxruntime {
 
-class UnmapFileParam {
- public:
-  void* addr;
-  size_t len;
-};
-
-static void UnmapFile(void* param) noexcept {
-  std::unique_ptr<UnmapFileParam> p(reinterpret_cast<UnmapFileParam*>(param));
-  bool ret = UnmapViewOfFile(p->addr);
-  if (!ret) {
-    const auto error_code = GetLastError();
-    LOGS_DEFAULT(ERROR) << "unmap view of file failed. error code: " << error_code
-                        << " error msg: " << std::system_category().message(error_code);
-  }
-}
 
 std::wstring Basename(const std::wstring& path) {
   auto basename_index = path.find_last_of(L"/\\") + 1;  // results in 0 if no separator is found
@@ -158,7 +140,7 @@ class WindowsThread : public EnvThread {
           } else {
             // Logical processor id starts from 0 internally, but in ort API, it starts from 1,
             // that's why id need to increase by 1 when logging.
-            LOGS_DEFAULT(ERROR) << "Cannot set affinity for thread " << GetCurrentThreadId()
+            std::cout << "Cannot set affinity for thread " << GetCurrentThreadId()
                                 << ", processor " << global_processor_id + 1 << " does not exist";
             group_id = -1;
             mask = 0;
@@ -167,7 +149,7 @@ class WindowsThread : public EnvThread {
           if (group_id == -1) {
             group_id = processor_info.group_id;
           } else if (group_id != processor_info.group_id) {
-            LOGS_DEFAULT(ERROR) << "Cannot set cross-group affinity for thread "
+            std::cout << "Cannot set cross-group affinity for thread "
                                 << GetCurrentThreadId() << ", first on group "
                                 << group_id << ", then on " << processor_info.group_id;
             group_id = -1;
@@ -180,12 +162,12 @@ class WindowsThread : public EnvThread {
           thread_affinity.Group = static_cast<WORD>(group_id);
           thread_affinity.Mask = mask;
           if (SetThreadGroupAffinity(GetCurrentThread(), &thread_affinity, nullptr)) {
-            LOGS_DEFAULT(VERBOSE) << "SetThreadAffinityMask done for thread: " << GetCurrentThreadId()
+            std::cout << "SetThreadAffinityMask done for thread: " << GetCurrentThreadId()
                                   << ", group_id: " << thread_affinity.Group
                                   << ", mask: " << thread_affinity.Mask;
           } else {
             const auto error_code = GetLastError();
-            LOGS_DEFAULT(ERROR) << "SetThreadAffinityMask failed for thread: " << GetCurrentThreadId()
+            std::cout << "SetThreadAffinityMask failed for thread: " << GetCurrentThreadId()
                                 << ", index: " << p->index
                                 << ", mask: " << *p->affinity
                                 << ", error code: " << error_code
@@ -248,44 +230,7 @@ int WindowsEnv::DefaultNumCores() {
 }
 
 int WindowsEnv::GetNumPhysicalCpuCores() const {
-// EIGEN_NO_CPUID is not defined in any C/C++ source code. It is a compile option.
-#if defined(_M_X64) && !defined(_M_ARM64EC) && !defined(EIGEN_NO_CPUID)
-  // The following code is a temporary fix for a perf problem on Intel's Meteor Lake CPUs. The Intel compute platform has
-  // a hybrid architecture that some CPU cores runs significant slower than the others. If we distribute our compute work
-  // evenly to all CPU cores, the slowest CPU core will drag the performance down. So, instead, we reduce the total number
-  // of threads to exclude the slowest cores out.
-  // The following code is based on assumptions that:
-  // 1. All Intel hybrid CPUs should have 3 levels of cache.
-  // 2. If a CPU core is only associated with two levels of cache,  it should be a low performance CPU core and should
-  //    not be used.
-  // Since we don't know what the next Intel hybrid CPU would be like, later on we may need to rework the following code.
-  // However, no matter what the code should not cause any crash. The worst is it might return 1 that
-  //  thread pools will not be created, which is just a perf issue and does not impact usability.
-  // TODO: detect if CPUID instruction is available per instructions at https://wiki.osdev.org/CPUID#Checking_CPUID_availability
-  int regs[4];
-  __cpuid(regs, 0);
-  bool bIsIntel =
-      (kVendorID_Intel[0] == regs[1]) &&
-      (kVendorID_Intel[1] == regs[2]) &&
-      (kVendorID_Intel[2] == regs[3]);
-  if (bIsIntel && regs[0] >= 7) {
-    // Query Structured Extended Feature Flags Enumeration Leaf
-    __cpuid(regs, 0x7);
-    // The bit 15 of EDX indicates if the processor is identified as a hybrid part.
-    bool ishybrid = regs[3] & (1 << 15);
-    if (ishybrid) {
-      // NOTE: even if ishybrid is true, it doesn't mean the processor must have P-cores and E-cores.
-      // On Intel CPUs we assume the HardwareCoreEnumerator::DefaultIntraOpNumThreads function would never fail.
-      // NOTE: due to resource restrictions, we cannot test this branch in our CI build pipelines.
-      return std::max(static_cast<uint32_t>(1), HardwareCoreEnumerator::DefaultIntraOpNumThreads());
-    } else {
-      return cores_.empty() ? DefaultNumCores() : static_cast<int>(cores_.size());
-    }
-  } else
-#endif
-  {
-    return cores_.empty() ? DefaultNumCores() : static_cast<int>(cores_.size());
-  }
+  return cores_.empty() ? DefaultNumCores() : static_cast<int>(cores_.size());
 }
 
 std::vector<LogicalProcessors> WindowsEnv::GetDefaultThreadAffinities() const {
@@ -394,18 +339,6 @@ Status WindowsEnv::ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* const file_path, c
   return Status::OK();
 }
 
-
-
-bool WindowsEnv::FileExists(const std::wstring& path) const {
-  DWORD attributes = GetFileAttributesW(path.c_str());
-  return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_NORMAL);
-}
-
-bool WindowsEnv::FileExists(const std::string& path) const {
-  DWORD attributes = GetFileAttributesA(path.c_str());
-  return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_NORMAL);
-}
-
 common::Status WindowsEnv::GetCanonicalPath(
     const PathString& path,
     PathString& canonical_path) const {
@@ -489,43 +422,6 @@ PathString WindowsEnv::GetRuntimePath() const {
   return path.substr(0, slash_index + 1);
 }
 
-Status WindowsEnv::LoadDynamicLibrary(const PathString& wlibrary_filename, bool /*global_symbols*/, void** handle) const {
-#if WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
-  *handle = ::LoadPackagedLibrary(wlibrary_filename.c_str(), 0);
-#else
-  // TODO: in most cases, the path name is a relative path and the behavior of the following line of code is undefined.
-  *handle = ::LoadLibraryExW(wlibrary_filename.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-#endif
-  if (!*handle) {
-    const auto error_code = GetLastError();
-    static constexpr DWORD bufferLength = 64 * 1024;
-    std::wstring s(bufferLength, '\0');
-    FormatMessageW(
-        FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        error_code,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPWSTR)s.data(),
-        bufferLength, NULL);
-    s.erase(std::remove(s.begin(), s.end(), L'\r'), s.end());
-    s.erase(std::remove(s.begin(), s.end(), L'\n'), s.end());
-    std::wostringstream oss;
-    oss << DetermineLoadLibraryError(wlibrary_filename.c_str(), LOAD_WITH_ALTERED_SEARCH_PATH)
-        << L" (Error " << error_code << ": \"" << s.c_str() << "\")";
-    std::wstring errmsg = oss.str();
-    common::Status status(common::ONNXRUNTIME, common::FAIL, ToUTF8String(errmsg));
-    return status;
-  }
-  return Status::OK();
-}
-
-Status WindowsEnv::UnloadDynamicLibrary(void* handle) const {
-  if (::FreeLibrary(reinterpret_cast<HMODULE>(handle)) == 0) {
-    const auto error_code = GetLastError();
-    return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, "FreeLibrary failed with error ", error_code, " - ", std::system_category().message(error_code));
-  }
-  return Status::OK();
-}
 
 namespace dlfcn_win32 {
 // adapted from https://github.com/dlfcn-win32 version 1.3.1.
@@ -580,39 +476,6 @@ void* SearchModulesForSymbol(const char* name) {
 }
 }  // namespace dlfcn_win32
 
-Status WindowsEnv::GetSymbolFromLibrary(void* handle, const std::string& symbol_name, void** symbol) const {
-  Status status = Status::OK();
-
-  // global search to replicate dlsym RTLD_DEFAULT if handle is nullptr
-  if (handle == nullptr) {
-    *symbol = dlfcn_win32::SearchModulesForSymbol(symbol_name.c_str());
-  } else {
-    *symbol = ::GetProcAddress(reinterpret_cast<HMODULE>(handle), symbol_name.c_str());
-  }
-
-  if (!*symbol) {
-    const auto error_code = GetLastError();
-    static constexpr DWORD bufferLength = 64 * 1024;
-    std::wstring s(bufferLength, '\0');
-    FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error_code,
-                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                   (LPWSTR)s.data(), 0, NULL);
-    std::wostringstream oss;
-    oss << L"Failed to find symbol " << ToWideString(symbol_name) << L" in library, error code: "
-        << error_code << L" \"" << s.c_str() << L"\"";
-    std::wstring errmsg = oss.str();
-    // TODO: trim the ending '\r' and/or '\n'
-    status = Status(common::ONNXRUNTIME, common::FAIL, ToUTF8String(errmsg));
-  }
-
-  return status;
-}
-
-std::string WindowsEnv::FormatLibraryFileName(const std::string& name, const std::string& version) const {
-  ORT_UNUSED_PARAMETER(name);
-  ORT_UNUSED_PARAMETER(version);
-  ORT_NOT_IMPLEMENTED(__FUNCTION__, " is not implemented");
-}
 
 // \brief returns a value for the queried variable name (var_name)
 std::string WindowsEnv::GetEnvironmentVar(const std::string& var_name) const {
@@ -673,7 +536,7 @@ void WindowsEnv::InitializeCpuInfo() {
   if (last_error != ERROR_INSUFFICIENT_BUFFER) {
     const auto error_code = GetLastError();
     if (logging::LoggingManager::HasDefaultLogger()) {
-      LOGS_DEFAULT(ERROR) << "Failed to calculate byte size for saving cpu info on windows"
+      std::cout << "Failed to calculate byte size for saving cpu info on windows"
                           << ", error code: " << error_code
                           << ", error msg: " << std::system_category().message(error_code);
     }
@@ -686,7 +549,7 @@ void WindowsEnv::InitializeCpuInfo() {
   if (!GetLogicalProcessorInformationEx(RelationProcessorCore, processorInfos, &returnLength)) {
     const auto error_code = GetLastError();
     if (logging::LoggingManager::HasDefaultLogger()) {
-      LOGS_DEFAULT(ERROR) << "Failed to fetch cpu info on windows"
+      std::cout << "Failed to fetch cpu info on windows"
                           << ", error code: " << error_code
                           << ", error msg: " << std::system_category().message(error_code);
     }
@@ -739,7 +602,7 @@ void WindowsEnv::InitializeCpuInfo() {
   if (last_error != ERROR_INSUFFICIENT_BUFFER) {
     const auto error_code = GetLastError();
     if (logging::LoggingManager::HasDefaultLogger()) {
-      LOGS_DEFAULT(ERROR) << "Failed to calculate byte size for saving cpu info on windows"
+      std::cout << "Failed to calculate byte size for saving cpu info on windows"
                           << ", error code: " << error_code
                           << ", error msg: " << std::system_category().message(error_code);
     }
@@ -755,7 +618,7 @@ void WindowsEnv::InitializeCpuInfo() {
   if (!GetLogicalProcessorInformationEx(RelationCache, processorInfos, &newLength)) {
     const auto error_code = GetLastError();
     if (logging::LoggingManager::HasDefaultLogger()) {
-      LOGS_DEFAULT(ERROR) << "Failed to fetch cpu info on windows"
+      std::cout << "Failed to fetch cpu info on windows"
                           << ", error code: " << error_code
                           << ", error msg: " << std::system_category().message(error_code);
     }
