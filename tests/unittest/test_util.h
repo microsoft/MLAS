@@ -7,6 +7,7 @@
 #include "gtest/gtest.h"
 
 #include <stdio.h>
+#include <stdexcept>
 #include <memory.h>
 #include <algorithm>
 #include <cmath>
@@ -87,7 +88,11 @@ class MatrixGuardBuffer {
 
 #if defined(_WIN32)
       if (VirtualAlloc(_BaseBuffer, BytesToAllocate, MEM_COMMIT, PAGE_READWRITE) == nullptr) {
+#ifdef BUILD_MLAS_NO_ONNXRUNTIME
+        abort();
+#else
         ORT_THROW_EX(std::bad_alloc);
+#endif
       }
 #else
       if (mprotect(_BaseBuffer, BytesToAllocate, PROT_READ | PROT_WRITE) != 0) {

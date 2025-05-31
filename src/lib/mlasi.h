@@ -252,25 +252,66 @@ enum MlasUArch {
 // Define MLAS_FP16
 //
 #include "mlas_float16.h"
+#include "../ort_include/core/session/onnxruntime_float16.h"
 
 namespace onnxruntime
 {
-struct MLFloat16 {
-    uint16_t val{0};
+// MLFloat16
+struct MLFloat16 : onnxruntime_float16::Float16Impl<MLFloat16> {
+ private:
+  explicit constexpr MLFloat16(uint16_t x) noexcept { val = x; }
 
-    MLFloat16() = default;
-    explicit constexpr MLFloat16(uint16_t x) : val(x) {}
-    explicit MLFloat16(float ff) : val(MLAS_Float2Half(ff)) {}
+ public:
+  using Base = onnxruntime_float16::Float16Impl<MLFloat16>;
 
-    float ToFloat() const { return MLAS_Half2Float(val); }
+  MLFloat16() = default;
 
-    operator float() const { return ToFloat(); }
+  constexpr static MLFloat16 FromBits(uint16_t x) noexcept { return MLFloat16(x); }
 
-    MLFloat16& operator=(float ff)
-    {
-        val = MLAS_Float2Half(ff);
-        return *this;
-    }
+  // Using inherited implementation instead of math floatToHalf allows us to use this
+  // in other shared providers without having to implement the bridge
+  explicit MLFloat16(float v) noexcept { val = Base::ToUint16Impl(v); }
+
+  static const MLFloat16 NaN;
+  static const MLFloat16 NegativeNaN;
+  static const MLFloat16 Infinity;
+  static const MLFloat16 NegativeInfinity;
+  static const MLFloat16 MaxValue;
+  static const MLFloat16 Zero;
+  static const MLFloat16 One;
+  static const MLFloat16 MinusOne;
+
+  // Using inherited implementation instead of math halfToFloat allows us to use this
+  // in other shared providers without having to implement the bridge
+  float ToFloat() const noexcept { return Base::ToFloatImpl(); }
+
+  using Base::IsNegative;
+
+  using Base::IsNaN;
+
+  using Base::IsFinite;
+
+  using Base::IsPositiveInfinity;
+
+  using Base::IsNegativeInfinity;
+
+  using Base::IsInfinity;
+
+  using Base::IsNaNOrZero;
+
+  using Base::IsNormal;
+
+  using Base::IsSubnormal;
+
+  using Base::Abs;
+
+  using Base::Negate;
+
+  operator float() const noexcept { return ToFloat(); }
+
+  using Base::operator==;
+  using Base::operator!=;
+  using Base::operator<;
 };
 
 inline bool
