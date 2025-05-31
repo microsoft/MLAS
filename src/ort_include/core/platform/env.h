@@ -138,42 +138,11 @@ class Env {
 
   virtual int GetL2CacheSize() const = 0;
 
-  /// Sleeps/delays the thread for the prescribed number of micro-seconds.
-  /// On Windows, it's the min time to sleep, not the actual one.
-  virtual void SleepForMicroseconds(int64_t micros) const = 0;
 
-  /**
-   * Gets the length of the specified file.
-   */
-  virtual common::Status GetFileLength(_In_z_ const ORTCHAR_T* file_path, size_t& length) const = 0;
-  virtual common::Status GetFileLength(int fd, /*out*/ size_t& file_size) const = 0;
 
-  /**
-   * Copies the content of the file into the provided buffer.
-   * @param file_path The path to the file.
-   * @param offset The file offset from which to start reading.
-   * @param length The length in bytes to read.
-   * @param buffer The buffer in which to write.
-   */
-  virtual common::Status ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
-                                            gsl::span<char> buffer) const = 0;
-
-  /** Gets the canonical form of a file path (symlinks resolved). */
-  virtual common::Status GetCanonicalPath(
-      const PathString& path,
-      PathString& canonical_path) const = 0;
 
   // This functions is always successful. It can't fail.
   virtual PIDType GetSelfPid() const = 0;
-
-  
-
-  // \brief Gets the file path of the onnx runtime code
-  //
-  // Used to help load other shared libraries that live in the same folder as the core code, for example
-  // The DNNL provider shared library. Without this path, the module won't be found on windows in all cases.
-  virtual PathString GetRuntimePath() const { return PathString(); }
-
 
 
   // \brief returns a value for the queried variable name (var_name)

@@ -50,20 +50,13 @@ class WindowsEnv : public Env {
 #if defined(_MSC_VER) && !defined(__clang__)
 #pragma warning(pop)
 #endif
-  void SleepForMicroseconds(int64_t micros) const override;
   static int DefaultNumCores();
   int GetNumPhysicalCpuCores() const override;
   std::vector<LogicalProcessors> GetDefaultThreadAffinities() const override;
   int GetL2CacheSize() const override;
   static WindowsEnv& Instance();
   PIDType GetSelfPid() const override;
-  Status GetFileLength(_In_z_ const ORTCHAR_T* file_path, size_t& length) const override;
-  common::Status GetFileLength(int fd, /*out*/ size_t& file_size) const override;
-  Status ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* const file_path, const FileOffsetType offset, const size_t length,
-                            const gsl::span<char> buffer) const override;
- 
-  common::Status GetCanonicalPath(const PathString& path, PathString& canonical_path) const override;
-  PathString GetRuntimePath() const override;
+
 
   std::string GetEnvironmentVar(const std::string& var_name) const override;
   ProcessorInfo GetProcessorAffinityMask(int global_processor_id) const;
