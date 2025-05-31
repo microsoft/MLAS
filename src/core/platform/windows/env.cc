@@ -643,9 +643,9 @@ void WindowsEnv::InitializeCpuInfo() {
   }
 
   if (logging::LoggingManager::HasDefaultLogger()) {
-    LOGS_DEFAULT(VERBOSE) << "Found total " << cores_.size() << " core(s) from windows system:";
-    LOGS_DEFAULT(VERBOSE) << log_stream.str();
-    LOGS_DEFAULT(VERBOSE) << "\nDetected L2 cache size: " << l2_cache_size_ << " bytes";
+    std::cout << "Found total " << cores_.size() << " core(s) from windows system:";
+    std::cout << log_stream.str();
+    std::cout << "\nDetected L2 cache size: " << l2_cache_size_ << " bytes";
   }
 }
 }  // namespace onnxruntime

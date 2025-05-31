@@ -366,7 +366,7 @@ CPUIDInfo::CPUIDInfo() {
 #if defined(CPUINFO_SUPPORTED)
   pytorch_cpuinfo_init_ = cpuinfo_initialize();
   if (!pytorch_cpuinfo_init_) {
-    LOGS_DEFAULT(WARNING) << "Failed to initialize PyTorch cpuinfo library. May cause CPU EP performance degradation "
+    std::cout << "Failed to initialize PyTorch cpuinfo library. May cause CPU EP performance degradation "
                              "due to undetected CPU features.";
   }
 #endif  // defined(CPUINFO_SUPPORTED)

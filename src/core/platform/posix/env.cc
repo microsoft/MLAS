@@ -96,7 +96,7 @@ int nftw_remove(
   const auto result = remove(fpath);
   if (result != 0) {
     auto [err_no, err_msg] = GetErrnoInfo();
-    LOGS_DEFAULT(WARNING) << "remove() failed. Error code: " << err_no << " error msg: " << err_msg
+    std::cout << "remove() failed. Error code: " << err_no << " error msg: " << err_msg
                           << ", path: " << fpath;
   }
   return result;
@@ -197,7 +197,7 @@ class PosixThread : public EnvThread {
         }
         auto ret = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
         if (0 == ret) {
-          LOGS_DEFAULT(VERBOSE) << "pthread_setaffinity_np succeed for thread: " << syscall(SYS_gettid)
+          std::cout << "pthread_setaffinity_np succeed for thread: " << syscall(SYS_gettid)
                                 << ", index: " << p->index
                                 << ", mask: " << *p->affinity;
         } else {
@@ -425,7 +425,7 @@ class PosixEnv : public Env {
   PosixEnv() {
     cpuinfo_available_ = cpuinfo_initialize();
     if (!cpuinfo_available_) {
-      LOGS_DEFAULT(INFO) << "cpuinfo_initialize failed";
+      std::cout << "cpuinfo_initialize failed";
     }
   }
   bool cpuinfo_available_{false};
