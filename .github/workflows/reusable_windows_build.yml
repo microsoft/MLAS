@@ -1,0 +1,83 @@
+name: Reusable Windows Build
+
+on:
+  workflow_call:
+    inputs:
+      job-name: # For display purposes in the reusable workflow logs
+        required: true
+        type: string
+      cmake-workflow-preset:
+        required: true
+        type: string
+      enable-codeql:
+        required: false
+        type: boolean
+        default: false
+      codeql-config-file:
+        required: false
+        type: string
+        default: ./.github/codeql/codeql-config.yml
+      codeql-sarif-output-dir:
+        required: false
+        type: string
+        default: sarif-results
+
+permissions:
+  actions: read
+  contents: read
+  # security-events: write is needed only if CodeQL is enabled and uploads SARIF
+  # We'll set it at the job level within this reusable workflow for clarity.
+
+jobs:
+  build_and_optional_analyze:
+    name: ${{ inputs.job-name }}
+    runs-on: windows-2022
+    # Define permissions here based on whether CodeQL might run.
+    # If enable-codeql can be true, then security-events: write is needed.
+    permissions:
+      actions: read
+      contents: read
+      security-events: write # Needed if CodeQL analysis runs & uploads
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL (if enabled)
+        if: ${{ inputs.enable-codeql }}
+        uses: github/codeql-action/init@v3
+        with:
+          config-file: ${{ inputs.codeql-config-file }}
+          languages: 'cpp'
+
+      - name: Run CMake Workflow
+        run: |
+          cmake --workflow --preset ${{ inputs.cmake-workflow-preset }}
+        shell: cmd # Ensuring shell is explicit for windows runners if needed
+
+      - name: Perform CodeQL Analysis (if enabled)
+        if: ${{ inputs.enable-codeql }}
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp" # Category for the analysis
+          output: ${{ inputs.codeql-sarif-output-dir }} # Directory for SARIF files
+          upload: failure-only # Upload SARIF results only on failure
+
+      - name: Filter SARIF (if CodeQL enabled)
+        if: ${{ inputs.enable-codeql }}
+        uses: advanced-security/filter-sarif@v1
+        with:
+          patterns: |
+            +**/*.cc
+            +**/*.h
+            -tests/**/*.*
+            -build/**/*.*
+          input: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif
+          output: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif.filtered # Output to a new file
+
+      - name: Upload filtered SARIF (if CodeQL enabled)
+        if: ${{ inputs.enable-codeql }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif.filtered
+          category: cpp-${{ inputs.job-name }} # Make category unique if needed
