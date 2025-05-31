@@ -756,7 +756,7 @@ endif()
         endif()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
-          onnxruntime_add_static_library(onnxruntime_mlas_x64 ${mlas_platform_srcs})
+          onnxruntime_add_static_library(onnxruntime_mlas_x86_64 ${mlas_platform_srcs})
           set_target_properties(onnxruntime_mlas_x86_64 PROPERTIES OSX_ARCHITECTURES "x86_64")
           list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_x86_64)
           set(mlas_platform_srcs )
