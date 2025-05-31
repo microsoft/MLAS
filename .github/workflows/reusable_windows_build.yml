@@ -6,6 +6,9 @@ on:
       job-name: # For display purposes in the reusable workflow logs
         required: true
         type: string
+      runner-os: # New input for the runner OS
+        required: true
+        type: string
       cmake-workflow-preset:
         required: true
         type: string
@@ -25,16 +28,13 @@ on:
 permissions:
   actions: read
   contents: read
-  # security-events: write is needed only if CodeQL is enabled and uploads SARIF
-  # We'll set it at the job level within this reusable workflow for clarity.
+  security-events: write # Needed if CodeQL analysis runs & uploads
 
 jobs:
   build_and_optional_analyze:
     name: ${{ inputs.job-name }}
-    runs-on: windows-2022
-    # Define permissions here based on whether CodeQL might run.
-    # If enable-codeql can be true, then security-events: write is needed.
-    permissions:
+    runs-on: ${{ inputs.runner-os }} # Use the input for runs-on
+    permissions: # Permissions moved here as they are job-specific
       actions: read
       contents: read
       security-events: write # Needed if CodeQL analysis runs & uploads
@@ -53,15 +53,15 @@ jobs:
       - name: Run CMake Workflow
         run: |
           cmake --workflow --preset ${{ inputs.cmake-workflow-preset }}
-        shell: cmd # Ensuring shell is explicit for windows runners if needed
+        shell: cmd 
 
       - name: Perform CodeQL Analysis (if enabled)
         if: ${{ inputs.enable-codeql }}
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:cpp" # Category for the analysis
-          output: ${{ inputs.codeql-sarif-output-dir }} # Directory for SARIF files
-          upload: failure-only # Upload SARIF results only on failure
+          category: "/language:cpp" 
+          output: ${{ inputs.codeql-sarif-output-dir }} 
+          upload: failure-only 
 
       - name: Filter SARIF (if CodeQL enabled)
         if: ${{ inputs.enable-codeql }}
@@ -73,11 +73,11 @@ jobs:
             -tests/**/*.*
             -build/**/*.*
           input: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif
-          output: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif.filtered # Output to a new file
+          output: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif.filtered 
 
       - name: Upload filtered SARIF (if CodeQL enabled)
         if: ${{ inputs.enable-codeql }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ inputs.codeql-sarif-output-dir }}/cpp.sarif.filtered
-          category: cpp-${{ inputs.job-name }} # Make category unique if needed
+          category: cpp-${{ inputs.job-name }}

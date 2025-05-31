@@ -8,7 +8,7 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -17,14 +17,15 @@ jobs:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: Win32_Debug_NoOrt_CodeQL
+      runner-os: windows-2022
       cmake-workflow-preset: windows_win32_debug_no_ort_workflow
       enable-codeql: true
-      # codeql-config-file can be omitted if default is fine
 
   Win32_release_no_ort:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: Win32_Release_NoOrt
+      runner-os: windows-2022
       cmake-workflow-preset: windows_win32_release_no_ort_workflow
       enable-codeql: false
 
@@ -33,6 +34,7 @@ jobs:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: Winx64_Debug_NoOrt_CodeQL
+      runner-os: windows-2022
       cmake-workflow-preset: windows_x64_debug_no_ort_workflow
       enable-codeql: true
 
@@ -40,34 +42,31 @@ jobs:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: Winx64_Release_NoOrt
+      runner-os: windows-2022
       cmake-workflow-preset: windows_x64_release_no_ort_workflow
       enable-codeql: false
-
+      
   WinX64_release:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: Winx64_Release
+      runner-os: windows-2022
       cmake-workflow-preset: windows_x64_release_workflow
       enable-codeql: false
 
-  # Windows ARM64 Jobs (New)
+  # Windows ARM64 Jobs
   WinARM64_debug_no_ort:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: WinARM64_Debug_NoOrt_CodeQL
-      cmake-workflow-preset: windows_arm64_debug_no_ort_workflow # Ensure this preset exists
+      runner-os: windows-11-arm # Use ARM64 runner
+      cmake-workflow-preset: windows_arm64_debug_no_ort_workflow 
       enable-codeql: true
-
-  WinARM64_release_no_ort:
-    uses: ./.github/workflows/reusable_windows_build.yml
-    with:
-      job-name: WinARM64_Release_NoOrt
-      cmake-workflow-preset: windows_arm64_release_no_ort_workflow # Ensure this preset exists
-      enable-codeql: false
 
   WinARM64_release:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
       job-name: WinARM64_Release
-      cmake-workflow-preset: windows_arm64_release_workflow # Ensure this preset exists
+      runner-os: windows-11-arm # Use ARM64 runner
+      cmake-workflow-preset: windows_arm64_release_workflow 
       enable-codeql: false
