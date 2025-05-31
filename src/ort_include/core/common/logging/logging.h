@@ -50,8 +50,9 @@
 
 */
 
-namespace onnxruntime {
+struct OrtLogger;  // opaque API type. is always an instance of Logger
 
+namespace onnxruntime {
 namespace logging {
 
 using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
@@ -84,7 +85,7 @@ using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
 #endif
 #endif  // __APPLE__
 
-#if _WIN32 || ORT_USE_CXX20_STD_CHRONO
+#if ORT_USE_CXX20_STD_CHRONO
 namespace timestamp_ns = std::chrono;
 #else
 namespace timestamp_ns = ::date;
@@ -350,6 +351,10 @@ class Logger {
   void SendProfileEvent(profiling::EventRecord& eventRecord) const {
     logging_manager_->SendProfileEvent(eventRecord);
   }
+
+  // convert to API type for custom ops and plugin EPs
+  OrtLogger* ToExternal() { return reinterpret_cast<OrtLogger*>(this); }
+  const OrtLogger* ToExternal() const { return reinterpret_cast<const OrtLogger*>(this); }
 
  private:
   const LoggingManager* logging_manager_;

@@ -37,7 +37,9 @@ namespace Eigen {
 class ThreadPoolInterface;
 }
 namespace onnxruntime {
-
+namespace concurrency {
+  inline void SpinPause(){}
+}
 #ifdef _WIN32
 using PIDType = unsigned long;
 using FileOffsetType = int64_t;
@@ -78,7 +80,6 @@ struct ThreadOptions {
 
   // Set or unset denormal as zero.
   bool set_denormal_as_zero = false;
-
 };
 
 std::ostream& operator<<(std::ostream& os, const LogicalProcessors&);
@@ -156,9 +157,6 @@ class Env {
    */
   virtual common::Status ReadFileIntoBuffer(_In_z_ const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
                                             gsl::span<char> buffer) const = 0;
-
-
-
 
   /** Gets the canonical form of a file path (symlinks resolved). */
   virtual common::Status GetCanonicalPath(

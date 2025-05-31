@@ -59,6 +59,8 @@ add_library(onnxruntime_mlas STATIC
   ${MLAS_SRC_DIR}/activate.cpp
   ${MLAS_SRC_DIR}/logistic.cpp
   ${MLAS_SRC_DIR}/tanh.cpp
+  ${MLAS_SRC_DIR}/eltwise.h
+  ${MLAS_SRC_DIR}/eltwise.cpp
   ${MLAS_SRC_DIR}/erf.cpp
   ${MLAS_SRC_DIR}/compute.cpp
   ${MLAS_SRC_DIR}/quantize.cpp
@@ -72,6 +74,10 @@ add_library(onnxruntime_mlas STATIC
   ${MLAS_SRC_DIR}/sqnbitgemm_q8_block.h
   ${MLAS_SRC_DIR}/flashattn.cpp
   ${MLAS_SRC_DIR}/cast.cpp
+  ${MLAS_SRC_DIR}/rotary_embedding.h
+  ${MLAS_SRC_DIR}/rotary_embedding.cpp
+  ${MLAS_SRC_DIR}/softmax.h
+  ${MLAS_SRC_DIR}/saturation_check.cpp
 )
 
 target_sources(onnxruntime_mlas PRIVATE
@@ -88,7 +94,6 @@ if (NOT onnxruntime_ORT_MINIMAL_BUILD)
     ${MLAS_SRC_DIR}/q4gemm.cpp
   )
 endif()
-
 
 #TODO: set MASM flags properly
 function(setup_mlas_source_for_windows)
@@ -118,8 +123,19 @@ function(setup_mlas_source_for_windows)
         ${MLAS_SRC_DIR}/qnbitgemm_kernel_neon.cpp
         ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_fp32.cpp
         ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_int8.cpp
-        ${MLAS_SRC_DIR}/fp16_neon_common.cpp
+        ${MLAS_SRC_DIR}/cast_kernel_neon.cpp
         ${MLAS_SRC_DIR}/hqnbitgemm_kernel_neon_fp16.cpp
+        ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon.h
+        ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon.cpp
+        ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon_fp16.cpp
+        ${MLAS_SRC_DIR}/hgemm_kernel_neon.cpp
+        ${MLAS_SRC_DIR}/halfgemm_kernel_neon_fp16.cpp
+        ${MLAS_SRC_DIR}/softmax_kernel_neon.h
+        ${MLAS_SRC_DIR}/softmax_kernel_neon.cpp
+        ${MLAS_SRC_DIR}/softmax_kernel_neon_fp16.cpp
+        ${MLAS_SRC_DIR}/eltwise_kernel_neon.h
+        ${MLAS_SRC_DIR}/eltwise_kernel_neon.cpp
+        ${MLAS_SRC_DIR}/eltwise_kernel_neon_fp16.cpp
       )
 
       set(mlas_platform_preprocess_srcs
@@ -142,6 +158,10 @@ function(setup_mlas_source_for_windows)
         ${MLAS_SRC_DIR}/arm64/SymQgemmS8KernelSDot.asm
         ${MLAS_SRC_DIR}/arm64/SymQgemmS8KernelSDotLd64.asm
       )
+
+      if (onnxruntime_USE_KLEIDIAI)
+        setup_kleidiai()
+      endif()
     else()
       target_sources(onnxruntime_mlas PRIVATE
         ${MLAS_SRC_DIR}/qgemm_kernel_neon.cpp
@@ -200,6 +220,9 @@ function(setup_mlas_source_for_windows)
       ${MLAS_SRC_DIR}/dgemm.cpp
       ${mlas_platform_srcs_avx}
       ${mlas_platform_srcs_avx2}
+      ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.h
+      ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.cpp
+      ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.cpp
       ${MLAS_SRC_DIR}/qgemm_kernel_amx.cpp
       ${MLAS_SRC_DIR}/qgemm_kernel_avx2.cpp
       ${MLAS_SRC_DIR}/qgemm_kernel_sse.cpp
@@ -245,6 +268,11 @@ function(setup_mlas_source_for_windows)
       ${MLAS_SRC_DIR}/amd64/TanhKernelFma3.asm
       ${MLAS_SRC_DIR}/amd64/ErfKernelFma3.asm
     )
+
+    if(onnxruntime_ENABLE_CONVSYMKERNELAVX2_SAT_CHECKER)
+      set_source_files_properties(${MLAS_SRC_DIR}/amd64/ConvSymKernelAvx2.asm PROPERTIES COMPILE_FLAGS "-DENABLE_CONVSYMKERNELAVX2_SAT_CHECKER")
+    endif()
+
     if(MSVC_VERSION GREATER_EQUAL 1933)
       target_sources(onnxruntime_mlas PRIVATE
         ${MLAS_SRC_DIR}/amd64/cvtfp16Avx.asm
@@ -266,6 +294,24 @@ function(setup_mlas_source_for_windows)
   endif()
 endfunction()
 
+function(setup_kleidiai)
+  target_compile_definitions(onnxruntime_mlas PRIVATE USE_KLEIDIAI)
+
+  # Disable the KleidiAI tests
+  set(KLEIDIAI_BUILD_TESTS  OFF)
+
+  # Fetch KleidiAI sources:
+  if (NOT TARGET kleidiai)
+    onnxruntime_fetchcontent_declare(kleidiai URL ${DEP_URL_kleidiai} URL_HASH SHA1=${DEP_SHA1_kleidiai} EXCLUDE_FROM_ALL)
+  endif()
+  onnxruntime_fetchcontent_makeavailable(kleidiai)
+
+  target_sources(onnxruntime_mlas PRIVATE
+    ${MLAS_SRC_DIR}/kai_ukernel_interface.cpp
+  )
+  target_link_libraries(onnxruntime_mlas PRIVATE kleidiai)
+endfunction()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   if (onnxruntime_ENABLE_WEBASSEMBLY_SIMD)
     file(GLOB_RECURSE mlas_platform_srcs
@@ -275,6 +321,12 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
       ${mlas_platform_srcs}
       ${MLAS_SRC_DIR}/qgemm_kernel_wasmsimd.cpp
     )
+    if (onnxruntime_ENABLE_WEBASSEMBLY_RELAXED_SIMD)
+      set(mlas_platform_srcs
+        ${mlas_platform_srcs}
+        ${MLAS_SRC_DIR}/qgemm_kernel_wasmrelaxedsimd.cpp
+      )
+    endif()
   else()
     file(GLOB_RECURSE mlas_platform_srcs
       "${MLAS_SRC_DIR}/scalar/*.cpp"
@@ -397,7 +449,17 @@ else()
           ${MLAS_SRC_DIR}/qnbitgemm_kernel_neon.cpp
           ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_fp32.cpp
           ${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_int8.cpp
+          ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon.h
+          ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon.cpp
+          ${MLAS_SRC_DIR}/hgemm_kernel_neon.cpp
+          ${MLAS_SRC_DIR}/softmax_kernel_neon.h
+          ${MLAS_SRC_DIR}/softmax_kernel_neon.cpp
+          ${MLAS_SRC_DIR}/eltwise_kernel_neon.h
+          ${MLAS_SRC_DIR}/eltwise_kernel_neon.cpp
         )
+        if (onnxruntime_USE_KLEIDIAI)
+          setup_kleidiai()
+        endif()
         set_source_files_properties(${MLAS_SRC_DIR}/sqnbitgemm_kernel_neon_int8.cpp
                                     PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+dotprod")
         if (NOT APPLE)
@@ -414,8 +476,12 @@ else()
             ${MLAS_SRC_DIR}/qgemm_kernel_smmla.cpp
             ${MLAS_SRC_DIR}/qgemm_kernel_ummla.cpp
             ${MLAS_SRC_DIR}/sbgemm_kernel_neon.cpp
-            ${MLAS_SRC_DIR}/fp16_neon_common.cpp
+            ${MLAS_SRC_DIR}/cast_kernel_neon.cpp
             ${MLAS_SRC_DIR}/hqnbitgemm_kernel_neon_fp16.cpp
+            ${MLAS_SRC_DIR}/rotary_embedding_kernel_neon_fp16.cpp
+            ${MLAS_SRC_DIR}/halfgemm_kernel_neon_fp16.cpp
+            ${MLAS_SRC_DIR}/softmax_kernel_neon_fp16.cpp
+            ${MLAS_SRC_DIR}/eltwise_kernel_neon_fp16.cpp
           )
           set_source_files_properties(${MLAS_SRC_DIR}/aarch64/HalfGemmKernelNeon.S PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/aarch64/QgemmS8S8KernelSmmla.S PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+i8mm ")
@@ -425,14 +491,18 @@ else()
           set_source_files_properties(${MLAS_SRC_DIR}/dwconv.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/pooling_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/sbgemm_kernel_neon.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+bf16 ")
-          set_source_files_properties(${MLAS_SRC_DIR}/fp16_neon_common.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/cast_kernel_neon.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
           set_source_files_properties(${MLAS_SRC_DIR}/hqnbitgemm_kernel_neon_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/rotary_embedding_kernel_neon_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/halfgemm_kernel_neon_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/softmax_kernel_neon_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
+          set_source_files_properties(${MLAS_SRC_DIR}/eltwise_kernel_neon_fp16.cpp PROPERTIES COMPILE_FLAGS " -march=armv8.2-a+fp16 ")
         endif()
 
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
-            add_library(onnxruntime_mlas_arm64 STATIC ${mlas_platform_srcs})
-            list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_arm64)
+            add_library(onnxruntime_mlas_arm STATIC64 ${mlas_platform_srcs})
             set_target_properties(onnxruntime_mlas_arm64 PROPERTIES OSX_ARCHITECTURES "arm64")
+            list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_arm64)
             set(mlas_platform_srcs )
         else()
             set(MLAS_SOURCE_IS_NOT_SET 0)
@@ -601,7 +671,11 @@ else()
           ${MLAS_SRC_DIR}/x86_64/ErfKernelFma3.S
           ${MLAS_SRC_DIR}/intrinsics/avx2/qladd_avx2.cpp
           ${MLAS_SRC_DIR}/intrinsics/avx2/qdwconv_avx2.cpp
+          ${MLAS_SRC_DIR}/intrinsics/avx2/saturation_check_avx2.cpp
           ${MLAS_SRC_DIR}/sqnbitgemm_kernel_avx2.cpp
+          ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.h
+          ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.cpp
+          ${MLAS_SRC_DIR}/rotary_embedding_kernel_avx2.cpp
         )
         if(CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13.1 AND NOT(APPLE))
           set(mlas_platform_srcs_avx2
@@ -609,6 +683,7 @@ else()
             ${MLAS_SRC_DIR}/x86_64/cvtfp16Avx.S
           )
         endif()
+
 message(STATUS "CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
 
@@ -668,7 +743,7 @@ endif()
         if(NOT APPLE)
           set(mlas_platform_srcs
             ${mlas_platform_srcs}
-            ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmxCommon.S
+	        ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmxCommon.S
             ${MLAS_SRC_DIR}/qgemm_kernel_amx.cpp
             ${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmx.S
             )
@@ -676,8 +751,12 @@ endif()
           set_source_files_properties(${MLAS_SRC_DIR}/x86_64/QgemmU8S8KernelAmx.S PROPERTIES COMPILE_FLAGS "-mavx2 -mavx512bw -mavx512dq -mavx512vl -mavx512f")
         endif()
 
+        if(onnxruntime_ENABLE_CONVSYMKERNELAVX2_SAT_CHECKER)
+          set_source_files_properties(${MLAS_SRC_DIR}/x86_64/ConvSymKernelAvx2.S PROPERTIES COMPILE_FLAGS "-mavx2 -mfma -mf16c -DENABLE_CONVSYMKERNELAVX2_SAT_CHECKER")
+        endif()
+
         if(ONNXRUNTIME_MLAS_MULTI_ARCH)
-          add_library(onnxruntime_mlas_x86_64  STATIC ${mlas_platform_srcs})
+          add_library(onnxruntime_mlas_x STATIC86_64 ${mlas_platform_srcs})
           set_target_properties(onnxruntime_mlas_x86_64 PROPERTIES OSX_ARCHITECTURES "x86_64")
           list(APPEND ONNXRUNTIME_MLAS_LIBS onnxruntime_mlas_x86_64)
           set(mlas_platform_srcs )
@@ -740,7 +819,7 @@ if (PLATFORM_NAME STREQUAL "macabi")
 endif()
 
 if (NOT onnxruntime_BUILD_SHARED_LIB)
-    install(TARGETS onnxruntime_mlas
+    install(TARGETS onnxruntime_mlas EXPORT ${PROJECT_NAME}Targets
             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -763,23 +842,27 @@ endblock()
 
 
 
+
   #
   # Command line tool for quantization and de-quantization of 2-D fp32 tensors
   # based on block-wise quantization of int4
   #
 
-  add_executable(onnxruntime_mlas_q4dq
+  add_executable(onnxruntime_mlas_q4dq 
     ${MLAS_SRC_DIR}/q4_dq_cli.cpp
   )
   target_include_directories(onnxruntime_mlas_q4dq PRIVATE ${MLAS_INC_DIR} ${MLAS_SRC_DIR})
   set_target_properties(onnxruntime_mlas_q4dq PROPERTIES FOLDER "ONNXRuntimeTest")
 
-  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS})
+  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS} onnxruntime_common)
   if(NOT MLAS_NO_ONNXRUNTIME)
     target_link_libraries(onnxruntime_mlas_q4dq PRIVATE onnxruntime_common)
   endif()
   if (CPUINFO_SUPPORTED AND NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     target_link_libraries(onnxruntime_mlas_q4dq PRIVATE cpuinfo)
+  endif()
+  if(NOT WIN32)
+    target_link_libraries(onnxruntime_mlas_q4dq PRIVATE  ${CMAKE_DL_LIBS})
   endif()
   if (CMAKE_SYSTEM_NAME STREQUAL "Android")
     target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${android_shared_libs})
@@ -800,4 +883,3 @@ endblock()
       set_target_properties(onnxruntime_mlas_q4dq PROPERTIES LINK_FLAGS "-s ALLOW_MEMORY_GROWTH=1")
     endif()
   endif()
-

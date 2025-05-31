@@ -148,14 +148,13 @@ class PosixThread : public EnvThread {
               unsigned (*start_address)(int id, Eigen::ThreadPoolInterface* param), Eigen::ThreadPoolInterface* param,
               const ThreadOptions& thread_options) {
     ORT_ENFORCE(index >= 0, "Negative thread index is not allowed");
-    
-
+   
     auto param_ptr = std::make_unique<Param>(name_prefix, index, start_address, param);
     if (narrow<size_t>(index) < thread_options.affinities.size()) {
       param_ptr->affinity = thread_options.affinities[index];
     }
 
-   {
+    {
       pthread_attr_t attr;
       int s = pthread_attr_init(&attr);
       if (s != 0) {
@@ -183,7 +182,7 @@ class PosixThread : public EnvThread {
   }
 
   ~PosixThread() override {
-   {
+    {
       void* res;
 #ifdef NDEBUG
       pthread_join(hThread, &res);
@@ -412,7 +411,6 @@ class PosixEnv : public Env {
     return Status::OK();
   }
 
-
   static common::Status ReportSystemError(const char* operation_name, const std::string& path) {
     auto [err_no, err_msg] = GetErrnoInfo();
     std::ostringstream oss;
@@ -482,7 +480,6 @@ class PosixEnv : public Env {
     }
     return filename;
   }
-
 
   // \brief returns a value for the queried variable name (var_name)
   std::string GetEnvironmentVar(const std::string& var_name) const override {

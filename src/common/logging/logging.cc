@@ -249,7 +249,6 @@ unsigned int GetProcessId() {
 #endif
 }
 
-
 bool LoggingManager::AddSinkOfType(SinkType sink_type, std::function<std::unique_ptr<ISink>()> sinkFactory,
                                    logging::Severity severity) {
   std::lock_guard<std::mutex> guard(sink_mutex_);

@@ -30,7 +30,6 @@ Abstract:
   } while (false)
 
 #endif
-
 #include "mlas_q4.h"
 #include "mlasi.h"
 

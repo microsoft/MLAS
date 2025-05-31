@@ -25,7 +25,7 @@ limitations under the License.
 #if !defined(ORT_MINIMAL_BUILD)
 #ifdef _WIN32
 #include <Windows.h>
-#include <processthreadsapi.h>
+#include "processthreadsapi.h"
 #include <codecvt>
 #include <locale>
 #elif defined(__APPLE__)
@@ -439,7 +439,7 @@ void ThreadPool::ParallelForFixedBlockSizeScheduling(const std::ptrdiff_t total,
     // threads is handled within RunInParallel, hence we can deallocate lc and other state captured by
     // run_work.
     RunInParallel(run_work, num_work_items, block_size);
-  } 
+  }
 }
 
 void ThreadPool::SimpleParallelFor(std::ptrdiff_t total, const std::function<void(std::ptrdiff_t)>& fn) {
