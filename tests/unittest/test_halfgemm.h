@@ -17,6 +17,8 @@ Abstract:
 #pragma once
 
 #include "test_fp16.h"
+#include <cstdlib>
+#include <cstring>
 
 /**
  * @brief Test class for half precision GEMM
