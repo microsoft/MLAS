@@ -284,104 +284,12 @@ class PosixEnv : public Env {
 #endif
   }
 
-  void SleepForMicroseconds(int64_t micros) const override {
-    while (micros > 0) {
-      timespec sleep_time;
-      sleep_time.tv_sec = 0;
-      sleep_time.tv_nsec = 0;
-
-      if (micros >= OneMillion) {
-        sleep_time.tv_sec = static_cast<time_t>(std::min<int64_t>(micros / OneMillion,
-                                                                  std::numeric_limits<time_t>::max()));
-        micros -= static_cast<int64_t>(sleep_time.tv_sec) * OneMillion;
-      }
-      if (micros < OneMillion) {
-        sleep_time.tv_nsec = static_cast<decltype(timespec::tv_nsec)>(1000 * micros);
-        micros = 0;
-      }
-      while (nanosleep(&sleep_time, &sleep_time) != 0 && errno == EINTR) {
-        // Ignore signals and wait for the full interval to elapse.
-      }
-    }
-  }
 
   PIDType GetSelfPid() const override {
     return getpid();
   }
 
-  Status GetFileLength(const PathChar* file_path, size_t& length) const override {
-    ScopedFileDescriptor file_descriptor{open(file_path, O_RDONLY)};
-    return GetFileLength(file_descriptor.Get(), length);
-  }
-
-  common::Status GetFileLength(int fd, /*out*/ size_t& file_size) const override {
-    using namespace common;
-    if (fd < 0) {
-      return ORT_MAKE_STATUS(ONNXRUNTIME, INVALID_ARGUMENT, "Invalid fd was supplied: ", fd);
-    }
-
-    struct stat buf;
-    int rc = fstat(fd, &buf);
-    if (rc < 0) {
-      return ReportSystemError("fstat", "");
-    }
-
-    if (buf.st_size < 0) {
-      return ORT_MAKE_STATUS(SYSTEM, FAIL, "Received negative size from stat call");
-    }
-
-    if (static_cast<unsigned long long>(buf.st_size) > std::numeric_limits<size_t>::max()) {
-      return ORT_MAKE_STATUS(SYSTEM, FAIL, "File is too large.");
-    }
-
-    file_size = static_cast<size_t>(buf.st_size);
-    return Status::OK();
-  }
-
-  Status ReadFileIntoBuffer(const ORTCHAR_T* file_path, FileOffsetType offset, size_t length,
-                            gsl::span<char> buffer) const override {
-    ORT_RETURN_IF_NOT(file_path, "file_path == nullptr");
-    ORT_RETURN_IF_NOT(offset >= 0, "offset < 0");
-    ORT_RETURN_IF_NOT(length <= buffer.size(), "length > buffer.size()");
-
-    ScopedFileDescriptor file_descriptor{open(file_path, O_RDONLY)};
-    if (!file_descriptor.IsValid()) {
-      return ReportSystemError("open", file_path);
-    }
-
-    if (length == 0)
-      return Status::OK();
-
-    if (offset > 0) {
-      const FileOffsetType seek_result = lseek(file_descriptor.Get(), offset, SEEK_SET);
-      if (seek_result == -1) {
-        return ReportSystemError("lseek", file_path);
-      }
-    }
-
-    size_t total_bytes_read = 0;
-    while (total_bytes_read < length) {
-      constexpr size_t k_max_bytes_to_read = 1 << 30;  // read at most 1GB each time
-      const size_t bytes_remaining = length - total_bytes_read;
-      const size_t bytes_to_read = std::min(bytes_remaining, k_max_bytes_to_read);
-
-      const ssize_t bytes_read =
-          TempFailureRetry(read, file_descriptor.Get(), buffer.data() + total_bytes_read, bytes_to_read);
-
-      if (bytes_read == -1) {
-        return ReportSystemError("read", file_path);
-      }
-
-      if (bytes_read == 0) {
-        return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, "ReadFileIntoBuffer - unexpected end of file. ", "File: ", file_path,
-                               ", offset: ", offset, ", length: ", length);
-      }
-
-      total_bytes_read += bytes_read;
-    }
-
-    return Status::OK();
-  }
+ 
 
   static common::Status ReportSystemError(const char* operation_name, const std::string& path) {
     auto [err_no, err_msg] = GetErrnoInfo();
@@ -390,16 +298,6 @@ class PosixEnv : public Env {
     return common::Status(common::SYSTEM, err_no, oss.str());
   }
 
-  common::Status GetCanonicalPath(
-      const PathString& path,
-      PathString& canonical_path) const override {
-    MallocdStringPtr canonical_path_cstr{realpath(path.c_str(), nullptr), Freer<char>()};
-    if (!canonical_path_cstr) {
-      return ReportSystemError("realpath", path);
-    }
-    canonical_path.assign(canonical_path_cstr.get());
-    return Status::OK();
-  }
 
   // \brief returns a value for the queried variable name (var_name)
   std::string GetEnvironmentVar(const std::string& var_name) const override {
