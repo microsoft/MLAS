@@ -12,7 +12,7 @@ concurrency:
   
 jobs:
   Linux_arm64_gcc_release:
-    runs-on: ["self-hosted", "1ES.Pool=mlas-linux-ARM64-CPU"]
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
       - run: |
