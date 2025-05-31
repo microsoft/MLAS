@@ -854,7 +854,7 @@ endblock()
   target_include_directories(onnxruntime_mlas_q4dq PRIVATE ${MLAS_INC_DIR} ${MLAS_SRC_DIR})
   set_target_properties(onnxruntime_mlas_q4dq PROPERTIES FOLDER "ONNXRuntimeTest")
 
-  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS} onnxruntime_common)
+  target_link_libraries(onnxruntime_mlas_q4dq PRIVATE ${ONNXRUNTIME_MLAS_LIBS})
   if(NOT MLAS_NO_ONNXRUNTIME)
     target_link_libraries(onnxruntime_mlas_q4dq PRIVATE onnxruntime_common)
   endif()
