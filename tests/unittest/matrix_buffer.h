@@ -82,7 +82,21 @@ public:
         return GetFilledBuffer(
             elements,
             [](T* start, size_t count) {
-                //do nothing, so that we can catch read uninitialized values errors
+              constexpr float offset = -21.f;
+              constexpr float range = 43.f;
+
+              // The following value will be used in most GEMM/CONV tests. Because this value is an integer that is
+              // small enough, all the floating point operations will generate exact values instead of approximate 
+              // values.
+              float FillValue = 11.f;
+              T* FillAddress = start;
+              for (size_t i = 0; i < count; i++) {
+                auto itemv = FillValue - offset;
+                *FillAddress++ = (T)(itemv);
+
+                FillValue += 7.f;
+                FillValue = FillValue >= range ? FillValue - range : FillValue;
+              }
             });
     }
 
