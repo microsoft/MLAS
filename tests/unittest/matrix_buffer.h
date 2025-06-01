@@ -9,11 +9,6 @@
 #include <algorithm>    // For std::fill_n
 #include <new>          // For std::bad_alloc (alternative to abort)
 
-// Include crtdbg.h for _malloc_dbg and _free_dbg on Windows debug builds
-#if defined(_WIN32) && !defined(NDEBUG) && defined(_DEBUG)
-#include <crtdbg.h>
-#endif
-
 template <typename T>
 class MatrixGuardBuffer {
 public:
