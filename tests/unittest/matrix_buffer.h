@@ -46,12 +46,11 @@ public:
                 // Handle overflow, e.g., by aborting or throwing
                 abort(); 
             }
-            
-        #if defined(_WIN32) && !defined(NDEBUG) && defined(_DEBUG)
-            buffer_ = static_cast<T*>(_malloc_dbg(bytes_to_allocate, _NORMAL_BLOCK, __FILE__, __LINE__));
-        #else
-            buffer_ = static_cast<T*>(malloc(bytes_to_allocate));
-        #endif
+#ifdef _WIN32
+            buffer_ = static_cast<T*>(_aligned_malloc(bytes_to_allocate, 64));
+#else
+            buffer_ = static_cast<T*>(std::aligned_alloc(64, bytes_to_allocate));
+#endif
 
             if (buffer_ == nullptr) {
                 // Consider `throw std::bad_alloc();` for C++ style error handling.
@@ -89,8 +88,8 @@ public:
 
     void ReleaseBuffer() {
         if (buffer_ != nullptr) {
-        #if defined(_WIN32) && !defined(NDEBUG) && defined(_DEBUG)
-            _free_dbg(buffer_, _NORMAL_BLOCK);
+        #if defined(_WIN32)
+            _aligned_free(buffer_);
         #else
             free(buffer_);
         #endif

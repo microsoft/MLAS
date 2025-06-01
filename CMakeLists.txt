@@ -89,6 +89,9 @@ function(onnxruntime_configure_target target_name)
         $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<COMPILE_LANGUAGE:CXX>>:/MP>
         $<$<AND:$<C_COMPILER_ID:MSVC>,$<COMPILE_LANGUAGE:C>>:/MP>
     )
+    if(WIN32)
+        target_compile_options(${target_name} PRIVATE  "$<$<COMPILE_LANGUAGE:ASM_MASM>:/Zi>")        
+    endif()
 endfunction()
 
 function(onnxruntime_add_executable target_name)

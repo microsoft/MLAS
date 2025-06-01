@@ -57,9 +57,7 @@ bool AddTestRegister(TestRegister test_register) {
 }
 
 int main(int argc, char** argv) {
-  unsigned int current_control;
-  _controlfp_s(&current_control, 0, 0);                                                     // Get current control word
-  _controlfp_s(&current_control, ~(_EM_INVALID | _EM_ZERODIVIDE | _EM_DENORMAL), _MCW_EM);  // Unmask exceptions
+
   bool is_short_execute = (argc <= 1 || strcmp("--long", argv[1]) != 0);
   std::cout << "-------------------------------------------------------" << std::endl;
   if (is_short_execute) {

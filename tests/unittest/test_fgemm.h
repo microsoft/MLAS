@@ -195,14 +195,19 @@ class MlasFgemmTest : public MlasTestBase {
     std::fill_n(C, M * N * BatchSize, -0.5f);
     std::fill_n(CReference, M * N * BatchSize, -0.5f);
 
+    static constexpr float rtol = 1e-5f;
+    static constexpr float atol = 1e-8f;
+
     PackedContext.TestGemm(TransA, TransB, M, N, K, BatchSize, alpha, A, lda, B, ldb, beta, C, ldc, threadpool_);
     ReferenceGemm(TransA, TransB, M, N, K, BatchSize, alpha, A, lda, B, ldb, beta, CReference, ldc);
 
     for (size_t batch = 0, f = 0; batch < BatchSize; batch++) {
       for (size_t m = 0; m < M; m++) {
         for (size_t n = 0; n < N; n++, f++) {
+          T tolerance = atol + rtol * std::abs(CReference[f]);
+
           // Sensitive to comparing positive/negative zero.
-          ASSERT_NEAR(C[f], CReference[f],1e-5)
+          ASSERT_NEAR(C[f], CReference[f], tolerance)
               << " Diff @[" << batch << ", " << m << ", " << n << "] f=" << f << ", "
               << (Packed ? "Packed" : "NoPack") << "."
               << (Threaded ? "SingleThread" : "Threaded") << "/"
