@@ -58,10 +58,10 @@ jobs:
   WinARM64_debug_no_ort:
     uses: ./.github/workflows/reusable_windows_build.yml
     with:
-      job-name: WinARM64_Debug_NoOrt_CodeQL
+      job-name: WinARM64_Debug_NoOrt
       runner-os: windows-11-arm # Use ARM64 runner
       cmake-workflow-preset: windows_arm64_debug_no_ort_workflow 
-      enable-codeql: true
+      enable-codeql: false
 
   WinARM64_release:
     uses: ./.github/workflows/reusable_windows_build.yml
