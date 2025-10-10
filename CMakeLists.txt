@@ -15,7 +15,6 @@ cmake_policy(SET CMP0117 NEW)
 # Project
 project(MLAS C CXX)
 
-
 include(CheckCXXCompilerFlag)
 include(CheckLanguage)
 include(CMakeDependentOption)
