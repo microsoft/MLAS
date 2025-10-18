@@ -4,7 +4,7 @@
 #pragma once
 
 #include <unordered_set>
-#include <iostream>
+
 #include "core/common/common.h"
 #ifndef SHARED_PROVIDER
 #include "core/common/logging/logging.h"
@@ -83,7 +83,7 @@ std::optional<T> ParseTestOnlyEnvironmentVariable(const std::string& name,
   std::string default_hint = "End users should opt for provider options or session options.";
   const std::string& logged_hint = hint.empty() ? default_hint : hint;
 
-  std::cout << "Environment variable " << name << " is used. It is reserved for internal testing purpose. "
+  LOGS_DEFAULT(WARNING) << "Environment variable " << name << " is used. It is reserved for internal testing purpose. "
                         << logged_hint;
 
   return env;

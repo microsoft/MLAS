@@ -57,7 +57,6 @@ bool AddTestRegister(TestRegister test_register) {
 }
 
 int main(int argc, char** argv) {
-
   bool is_short_execute = (argc <= 1 || strcmp("--long", argv[1]) != 0);
   std::cout << "-------------------------------------------------------" << std::endl;
   if (is_short_execute) {

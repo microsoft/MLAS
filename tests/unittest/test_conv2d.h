@@ -245,22 +245,19 @@ class MlasConv2DTest : public MlasTestBase {
                     Filter,
                     Bias,
                     OutputReference);
-    static constexpr float rtol = 1e-4f;
-    static constexpr float atol = 1e-6f;
-    for (size_t i = 0; i != OutputElements; ++i) {
-      float tolerance = atol + rtol * std::abs(OutputReference[i]);
-      ASSERT_NEAR(Output[i], OutputReference[i], tolerance) << "B" << BatchCount << "/"
-                                                            << "G" << GroupCount << "/"
-                                                            << "Cpg" << InputChannels << "/"
-                                                            << "Fpg" << FilterCount << "/"
-                                                            << "H" << InputHeight << "/"
-                                                            << "W" << InputWidth << "/"
-                                                            << "KH" << KernelHeight << "/"
-                                                            << "KW" << KernelWidth << "/"
-                                                            << "Pad" << PaddingLeftHeight << "," << PaddingLeftWidth << "," << PaddingRightHeight << "," << PaddingRightWidth << "/"
-                                                            << "Dilation" << DilationHeight << "," << DilationWidth << "/"
-                                                            << "Stride" << StrideHeight << "," << StrideWidth;
-    }
+
+    ASSERT_EQ(memcmp(Output, OutputReference, OutputElements * sizeof(float)), 0)
+        << "B" << BatchCount << "/"
+        << "G" << GroupCount << "/"
+        << "Cpg" << InputChannels << "/"
+        << "Fpg" << FilterCount << "/"
+        << "H" << InputHeight << "/"
+        << "W" << InputWidth << "/"
+        << "KH" << KernelHeight << "/"
+        << "KW" << KernelWidth << "/"
+        << "Pad" << PaddingLeftHeight << "," << PaddingLeftWidth << "," << PaddingRightHeight << "," << PaddingRightWidth << "/"
+        << "Dilation" << DilationHeight << "," << DilationWidth << "/"
+        << "Stride" << StrideHeight << "," << StrideWidth;
   }
 
   void ExecuteLong(void) override {

@@ -286,9 +286,7 @@ MlasBlockwiseQuantizedBufferSizes(
     int columns,
     size_t& q_data_size_in_bytes,
     size_t& q_scale_num_elements,
-    size_t* q_zero_point_size_in_bytes
-);
-
+    size_t* q_zero_point_size_in_bytes);
 
 /**
  * @brief Blockwise 4 bits quantization, resulting elements and quantization

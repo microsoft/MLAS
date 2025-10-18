@@ -15,7 +15,7 @@ Abstract:
 --*/
 
 #include "mlasi.h"
-#include <string.h>
+#include <cstring>
 
 size_t
 MLASCALL

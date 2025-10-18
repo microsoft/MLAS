@@ -7,8 +7,7 @@
 #include <memory>
 #include <string>
 
-struct OrtThreadPoolParams
-{
+struct OrtThreadPoolParams {
   // 0: Use default setting. (All the physical cores or half of the logical cores)
   // 1: Don't create thread pool
   // n: Create a thread pool with n threads.
@@ -20,7 +19,13 @@ struct OrtThreadPoolParams
   bool auto_set_affinity = false;
 
   // If it is true, the thread pool will spin a while after the queue became empty.
+#if !defined(ORT_CLIENT_PACKAGE_BUILD)
   bool allow_spinning = true;
+#else
+  // default allow_spinning to false for ORT builds targeting client/on-device workloads,
+  // to reduce CPU utilization and improve power efficiency.
+  bool allow_spinning = false;
+#endif
 
   // It it is non-negative, thread pool will split a task by a decreasing block size
   // of remaining_of_total_iterations / (num_of_threads * dynamic_block_base_)
@@ -38,16 +43,15 @@ struct OrtThreadPoolParams
   // meaning ith thread will be attached to first 8 logical processors
   std::string affinity_str;
 
-  const ORTCHAR_T *name = nullptr;
+  const ORTCHAR_T* name = nullptr;
 
   // Set or unset denormal as zero
   bool set_denormal_as_zero = false;
 };
 
-std::ostream &operator<<(std::ostream &os, const OrtThreadPoolParams &params);
+std::ostream& operator<<(std::ostream& os, const OrtThreadPoolParams& params);
 
-struct OrtThreadingOptions
-{
+struct OrtThreadingOptions {
   // Params for creating the threads that parallelizes execution of an op
   OrtThreadPoolParams intra_op_thread_pool_params;
 
@@ -55,17 +59,14 @@ struct OrtThreadingOptions
   OrtThreadPoolParams inter_op_thread_pool_params;
 };
 
-namespace onnxruntime
-{
+namespace onnxruntime {
 
-  namespace concurrency
-  {
-    enum class ThreadPoolType : uint8_t
-    {
-      INTRA_OP,
-      INTER_OP
-    };
-    std::unique_ptr<ThreadPool> CreateThreadPool(Env *env, OrtThreadPoolParams options,
-                                                 ThreadPoolType tpool_type);
-  } // namespace concurrency
-} // namespace onnxruntime
+namespace concurrency {
+enum class ThreadPoolType : uint8_t {
+  INTRA_OP,
+  INTER_OP
+};
+std::unique_ptr<ThreadPool> CreateThreadPool(Env* env, OrtThreadPoolParams options,
+                                             ThreadPoolType tpool_type);
+}  // namespace concurrency
+}  // namespace onnxruntime

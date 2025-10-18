@@ -56,7 +56,7 @@ class FgemmPackedContext<float, false> {
   }
 };
 
-#if defined(MLAS_TARGET_AMD64) || defined(MLAS_TARGET_POWER)
+#if defined(MLAS_TARGET_AMD64) || defined(MLAS_TARGET_POWER) || defined(MLAS_TARGET_S390X)
 template <>
 class FgemmPackedContext<double, false> {
  public:
@@ -112,11 +112,11 @@ class FgemmPackedContext<float, true> {
       float* C,
       size_t ldc,
       MLAS_THREADPOOL* threadpool) {
-    size_t PackedBSize = MlasGemmPackBSize(N, K);
+    size_t PackedBSize = MlasGemmPackBSize(TransA, TransB, N, K);
     void* PackedB = BufferBPacked.GetBuffer(PackedBSize * BatchSize, true);
     std::vector<MLAS_SGEMM_DATA_PARAMS> data(BatchSize);
     for (size_t i = 0; i < BatchSize; i++) {
-      MlasGemmPackB(TransB, N, K, B + K * N * i, ldb, (uint8_t*)PackedB + PackedBSize * i);
+      MlasGemmPackB(TransA, TransB, N, K, B + K * N * i, ldb, (uint8_t*)PackedB + PackedBSize * i);
       data[i].BIsPacked = true;
       data[i].A = A + M * K * i;
       data[i].lda = lda;
@@ -195,19 +195,14 @@ class MlasFgemmTest : public MlasTestBase {
     std::fill_n(C, M * N * BatchSize, -0.5f);
     std::fill_n(CReference, M * N * BatchSize, -0.5f);
 
-    static constexpr float rtol = 1e-5f;
-    static constexpr float atol = 1e-8f;
-
     PackedContext.TestGemm(TransA, TransB, M, N, K, BatchSize, alpha, A, lda, B, ldb, beta, C, ldc, threadpool_);
     ReferenceGemm(TransA, TransB, M, N, K, BatchSize, alpha, A, lda, B, ldb, beta, CReference, ldc);
 
     for (size_t batch = 0, f = 0; batch < BatchSize; batch++) {
       for (size_t m = 0; m < M; m++) {
         for (size_t n = 0; n < N; n++, f++) {
-          T tolerance = atol + rtol * std::abs(CReference[f]);
-
           // Sensitive to comparing positive/negative zero.
-          ASSERT_NEAR(C[f], CReference[f], tolerance)
+          ASSERT_EQ(C[f], CReference[f])
               << " Diff @[" << batch << ", " << m << ", " << n << "] f=" << f << ", "
               << (Packed ? "Packed" : "NoPack") << "."
               << (Threaded ? "SingleThread" : "Threaded") << "/"

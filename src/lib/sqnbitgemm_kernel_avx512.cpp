@@ -18,7 +18,6 @@ Abstract:
 #include <algorithm>
 #include <cassert>
 #include <utility>
-#include <cstdlib>
 #include <cstring>
 
 #include "qnbitgemm.h"
@@ -266,7 +265,8 @@ SQ8BitGemmKernel_BlkSum_CompInt8_avx512(
     const float* Bias,
     size_t ldc,
     const float* ABlockSum,
-    const float* QuantBBlkSum
+    const float* QuantBBlkSum,
+    const float* /*QuantBBlkSum2*/
 )
 {
     if (BlkLen == 16) {

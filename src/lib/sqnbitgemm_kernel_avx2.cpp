@@ -18,7 +18,6 @@ Abstract:
 #include <algorithm>
 #include <cassert>
 #include <utility>
-#include <string.h>
 
 #include "qnbitgemm.h"
 #include "sqnbitgemm_kernel_avx_common.h"
@@ -29,6 +28,7 @@ Abstract:
 
 #include "sqnbitgemm_m1_sym_kernel_avx2_int8_blklen32.h"
 #include "sqnbitgemm_m1_sym_kernel_avx2_int8_blklen64.h"
+#include <cstring>
 
 void
 MlasCastF16ToF32KernelAvx2(const unsigned short* src_fp16, float* dst_fp32, size_t size)
@@ -603,7 +603,8 @@ SQ8BitGemmKernel_BlkSum_CompInt8_avx2(
     const float* Bias,
     size_t ldc,
     const float* ABlockSum,
-    const float* QuantBBlkSum
+    const float* QuantBBlkSum,
+    const float* /*QuantBBlkSum2*/
 )
 {
     if (BlkLen == 16) {

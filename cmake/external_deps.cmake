@@ -74,14 +74,22 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 
   set(GTEST_HAS_ABSL OFF CACHE BOOL "" FORCE)
  
+  # Disable the KleidiAI tests
+  set(KLEIDIAI_BUILD_TESTS  OFF)
+
+  onnxruntime_fetchcontent_declare(kleidiai URL ${DEP_URL_kleidiai} URL_HASH SHA1=${DEP_SHA1_kleidiai} EXCLUDE_FROM_ALL)
+  onnxruntime_fetchcontent_makeavailable(kleidiai)
+
+
   # gtest and gmock
-  FetchContent_Declare(
+  onnxruntime_fetchcontent_declare(
 	googletest
 	URL ${DEP_URL_googletest}
 	URL_HASH SHA1=${DEP_SHA1_googletest}
+	EXCLUDE_FROM_ALL
 	FIND_PACKAGE_ARGS 1.14.0...<2.0.0 NAMES GTest
   )
-  FetchContent_MakeAvailable(googletest)
+  onnxruntime_fetchcontent_makeavailable(googletest)
   #google benchmark doesn't work for Emscripten
   if (NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
       message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
@@ -90,10 +98,11 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 	  # We will not need to install benchmark since we link it statically.
 	  set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "Disable benchmark install to avoid overwriting vendor install.")
 	  
-	  FetchContent_Declare(
+	  onnxruntime_fetchcontent_declare(
 		google_benchmark
 		URL ${DEP_URL_google_benchmark}
 		URL_HASH SHA1=${DEP_SHA1_google_benchmark}
+		EXCLUDE_FROM_ALL
 		FIND_PACKAGE_ARGS NAMES benchmark
 	  )
 	  onnxruntime_fetchcontent_makeavailable(google_benchmark)

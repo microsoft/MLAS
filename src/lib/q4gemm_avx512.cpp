@@ -18,6 +18,7 @@ Abstract:
 --*/
 
 #include "q4gemm.h"
+#include <cstring>
 
 #include <type_traits>
 #include <immintrin.h>
