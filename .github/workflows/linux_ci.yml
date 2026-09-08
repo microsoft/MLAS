@@ -14,7 +14,7 @@ jobs:
   Linux_arm64_gcc_release:
     runs-on: ["self-hosted", "1ES.Pool=mlas-linux-ARM64-CPU"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -23,7 +23,7 @@ jobs:
   Linux_x64_gcc_ubuntu24_release_no_ort:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -36,9 +36,9 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@6f5948dfacef28e207b48d0905cf90c03365536d # v3.37.9
         with:
           config-file: ./.github/codeql/codeql-config.yml
           languages: 'cpp'
@@ -47,14 +47,14 @@ jobs:
          rm -rf build
          cmake --workflow --preset linux_gcc_release_workflow
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@6f5948dfacef28e207b48d0905cf90c03365536d # v3.37.9
         with:
           category: "/language:cpp"
           output: sarif-results
           upload: failure-only
         
       - name: filter-sarif
-        uses: advanced-security/filter-sarif@v1
+        uses: advanced-security/filter-sarif@f3b8118a9349d88f7b1c0c488476411145b6270d # v1.0.1
         with:
           patterns: |
             +**/*.cc
@@ -65,14 +65,14 @@ jobs:
           output: sarif-results/cpp.sarif
 
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@6f5948dfacef28e207b48d0905cf90c03365536d # v3.37.9
         with:
           sarif_file: sarif-results/cpp.sarif
  
   Linux_x64_gcc_ubuntu22_release:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -80,7 +80,7 @@ jobs:
   Linux_x64_gcc_ubuntu24_debug:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -88,7 +88,7 @@ jobs:
   Linux_x64_clang_ubuntu24_debug:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -96,7 +96,7 @@ jobs:
   Linux_x64_gcc_ubuntu24_debug_asan:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -104,7 +104,7 @@ jobs:
   Linux_wasm_debug_asan:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -123,7 +123,7 @@ jobs:
   Linux_wasm_release:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
@@ -142,7 +142,7 @@ jobs:
   Linux_wasm_release_no_exception:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - run: |
          set -e -x
          rm -rf build
